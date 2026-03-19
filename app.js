@@ -339,14 +339,23 @@ function iniciarCamara() {
         cameraStream.getTracks().forEach(track => track.stop());
         cameraStream = null;
     }
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: camaraActual } })
+    // Intentar con facingMode exact, si falla usar sin restricción
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: camaraActual } } })
         .then(stream => {
             cameraStream = stream;
             cameraVideo.srcObject = stream;
         })
-        .catch(error => {
-            alert('No se pudo acceder a la cámara: ' + error.message);
-            closeCamera();
+        .catch(() => {
+            // Fallback: sin exact (algunos móviles no soportan exact)
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: camaraActual } })
+                .then(stream => {
+                    cameraStream = stream;
+                    cameraVideo.srcObject = stream;
+                })
+                .catch(error => {
+                    alert('No se pudo acceder a la cámara: ' + error.message);
+                    closeCamera();
+                });
         });
 }
 
