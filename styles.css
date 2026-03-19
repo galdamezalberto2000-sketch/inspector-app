@@ -851,85 +851,328 @@ body {
 /* ===== SUPERVISOR ===== */
 #supervisorScreen {
     min-height: 100vh;
-    background: var(--gray-100);
+    background: #f0f4ff;
 }
 
+/* Stats row */
+.sup-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.sup-stat {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 14px 12px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    border-top: 3px solid var(--primary);
+}
+
+.sup-stat .stat-num {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.sup-stat .stat-label {
+    font-size: 11px;
+    color: var(--gray-500);
+    margin-top: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+}
+
+/* Filtros mejorados */
+.sup-filtros {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+}
+
+.sup-filtros-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 12px;
+}
+
+.sup-filtros-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.sup-filtros-grid select,
+.sup-filtros-grid input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 13px;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    transition: border-color 0.2s;
+}
+
+.sup-filtros-grid select:focus,
+.sup-filtros-grid input:focus {
+    border-color: var(--primary);
+    outline: none;
+    background: white;
+}
+
+.sup-filtros-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.btn-filtro-limpiar {
+    flex: 1;
+    padding: 10px;
+    background: var(--gray-100);
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--gray-600);
+    transition: all 0.2s;
+}
+
+.btn-filtro-limpiar:hover { background: var(--gray-200); }
+
+/* Cards de reporte */
 .reporte-card {
     background: white;
     border-radius: var(--radius-lg);
     border: 1px solid var(--gray-200);
     box-shadow: var(--shadow-sm);
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     overflow: hidden;
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.2s, transform 0.15s;
 }
 
-.reporte-card:hover { box-shadow: var(--shadow); }
+.reporte-card:hover {
+    box-shadow: 0 4px 20px rgba(37,99,235,0.12);
+    transform: translateY(-1px);
+}
 
 .reporte-card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 18px;
-    background: var(--gray-50);
-    border-bottom: 1px solid var(--gray-200);
+    padding: 14px 16px;
     cursor: pointer;
-    gap: 12px;
+    gap: 10px;
+    background: white;
+    border-left: 4px solid var(--primary);
+    transition: background 0.15s;
 }
 
-.reporte-card-header:hover { background: var(--primary-light); }
+.reporte-card-header:hover { background: #f8faff; }
+
+.reporte-card-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.reporte-card-header-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.reporte-card-header-sub {
+    font-size: 12px;
+    color: var(--gray-500);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .reporte-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
+    gap: 5px;
+    padding: 3px 10px;
     border-radius: 999px;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
-    color: white;
     white-space: nowrap;
 }
 
+/* Colores por módulo */
+.badge-medidor    { background: #dbeafe; color: #1d4ed8; }
+.badge-error      { background: #fee2e2; color: #b91c1c; }
+.badge-consumo    { background: #fef9c3; color: #854d0e; }
+.badge-reubicacion{ background: #d1fae5; color: #065f46; }
+.badge-postes     { background: #ede9fe; color: #5b21b6; }
+.badge-inspector  { background: #e0f2fe; color: #0369a1; }
+.badge-factura    { background: #fce7f3; color: #9d174d; }
+.badge-moto       { background: #ffedd5; color: #9a3412; }
+.badge-default    { background: linear-gradient(135deg,var(--primary),var(--secondary)); color: white; }
+
+.reporte-arrow {
+    font-size: 14px;
+    color: var(--gray-400);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.reporte-arrow.open { transform: rotate(180deg); }
+
 .reporte-card-body {
-    padding: 16px 18px;
+    padding: 16px;
     display: none;
+    border-top: 1px solid var(--gray-100);
+    background: #fafbff;
 }
 
 .reporte-card-body.open { display: block; }
 
-.reporte-fotos {
+/* Campos en grid */
+.reporte-campos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
-    margin-top: 12px;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 12px;
 }
-
-.reporte-fotos img {
-    width: 100%;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--gray-200);
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.reporte-fotos img:hover { transform: scale(1.04); }
 
 .reporte-campo {
-    display: flex;
-    gap: 8px;
-    font-size: 14px;
-    color: var(--gray-600);
-    margin-bottom: 6px;
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
 }
 
 .reporte-campo strong {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin-bottom: 2px;
+}
+
+.reporte-campo span {
     color: var(--gray-800);
-    min-width: 130px;
-    flex-shrink: 0;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.reporte-campo-full {
+    grid-column: 1 / -1;
+}
+
+/* Fotos */
+.reporte-fotos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 8px;
+}
+
+.reporte-foto-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--gray-200);
+    cursor: pointer;
+    aspect-ratio: 1;
+    background: var(--gray-100);
+    transition: border-color 0.2s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reporte-foto-item:hover {
+    border-color: var(--primary);
+    transform: scale(1.04);
+}
+
+.reporte-foto-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.reporte-foto-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(37,99,235,0.0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    opacity: 0;
+    transition: all 0.2s;
+}
+
+.reporte-foto-item:hover .reporte-foto-overlay {
+    background: rgba(37,99,235,0.35);
+    opacity: 1;
+}
+
+/* Visor foto grande */
+#fotoGrandeModal {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    background: rgba(0,0,0,0.92);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+}
+
+#fotoGrandeModal img {
+    max-width: 95vw;
+    max-height: 85vh;
+    border-radius: 10px;
+    object-fit: contain;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+
+#fotoGrandeModal .foto-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 1;
+    opacity: 0.8;
+}
+
+#fotoGrandeModal .foto-modal-close:hover { opacity: 1; }
+
+/* Contador */
+.sup-contador {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-bottom: 12px;
+    font-weight: 600;
+    padding: 0 2px;
 }
 
 /* ===== MOTO TABS ===== */

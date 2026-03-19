@@ -325,11 +325,21 @@ function setFechaGeneracion() {
 }
 
 // Abrir cámara
+let camaraActual = 'environment'; // 'environment' = trasera, 'user' = frontal
+
 function openCamera(type) {
     currentPhotoType = type;
+    camaraActual = 'environment'; // siempre inicia con cámara trasera
     cameraModal.style.display = 'block';
-    
-    navigator.mediaDevices.getUserMedia({ video: true })
+    iniciarCamara();
+}
+
+function iniciarCamara() {
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: camaraActual } })
         .then(stream => {
             cameraStream = stream;
             cameraVideo.srcObject = stream;
@@ -338,6 +348,11 @@ function openCamera(type) {
             alert('No se pudo acceder a la cámara: ' + error.message);
             closeCamera();
         });
+}
+
+function voltearCamara() {
+    camaraActual = camaraActual === 'environment' ? 'user' : 'environment';
+    iniciarCamara();
 }
 
 // Cerrar cámara
@@ -2834,8 +2849,12 @@ function limpiarFiltros() {
     document.getElementById('filtroModulo').value = '';
     document.getElementById('filtroInspector').value = '';
     document.getElementById('filtroFecha').value = '';
-    cargarReportesSupervisor();
+    document.getElementById('filtroTexto').value = '';
+    aplicarFiltros();
 }
+
+// Cache de todos los reportes cargados
+let _todosLosReportes = [];
 
 // Carga reportes desde Google Sheets via GAS
 async function cargarReportesSupervisor() {
@@ -2844,12 +2863,8 @@ async function cargarReportesSupervisor() {
     lista.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Cargando reportes...</p></div>';
     contador.textContent = '';
 
-    const modulo    = document.getElementById('filtroModulo').value;
-    const inspector = document.getElementById('filtroInspector').value;
-    const fecha     = document.getElementById('filtroFecha').value;
-
     try {
-        const payload = { accion: 'obtenerReportes', modulo, inspector, fecha };
+        const payload = { accion: 'obtenerReportes' };
         const res = await fetch(GAS_URL_FIJA, {
             method: 'POST',
             redirect: 'follow',
@@ -2861,13 +2876,37 @@ async function cargarReportesSupervisor() {
 
         if (!data.success) throw new Error(data.error || 'Error desconocido');
 
-        renderDashboard(data.reportes);
+        _todosLosReportes = data.reportes;
         poblarFiltroInspectores(data.reportes);
+        actualizarStats(data.reportes);
+        aplicarFiltros();
 
     } catch(err) {
         lista.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>No se pudo conectar al servidor.<br><small>${err.message}</small></p></div>`;
         contador.textContent = '';
     }
+}
+
+function aplicarFiltros() {
+    const modulo    = document.getElementById('filtroModulo').value.toLowerCase();
+    const inspector = document.getElementById('filtroInspector').value.toLowerCase();
+    const fecha     = document.getElementById('filtroFecha').value;
+    const texto     = (document.getElementById('filtroTexto').value || '').toLowerCase();
+
+    let filtrados = _todosLosReportes.filter(r => {
+        const mod  = (r['Módulo'] || r['Modulo'] || '').toLowerCase();
+        const insp = (r['Inspector'] || r['Usuario'] || '').toLowerCase();
+        const fech = (r['Fecha'] || '').toString();
+        const todo = JSON.stringify(r).toLowerCase();
+
+        if (modulo    && !mod.includes(modulo))       return false;
+        if (inspector && !insp.includes(inspector))   return false;
+        if (fecha     && !fech.includes(fecha))        return false;
+        if (texto     && !todo.includes(texto))        return false;
+        return true;
+    });
+
+    renderDashboard(filtrados);
 }
 
 function poblarFiltroInspectores(reportes) {
@@ -2883,6 +2922,33 @@ function poblarFiltroInspectores(reportes) {
     if (actual) sel.value = actual;
 }
 
+function actualizarStats(reportes) {
+    document.getElementById('statTotal').textContent = reportes.length;
+    const hoy = new Date().toLocaleDateString('es-HN');
+    const hoyCount = reportes.filter(r => {
+        const f = (r['Fecha Registro'] || '').toString();
+        return f.includes(new Date().toLocaleDateString('es-HN').split('/').reverse().join('-')) ||
+               f.includes(new Date().toISOString().split('T')[0]);
+    }).length;
+    document.getElementById('statHoy').textContent = hoyCount;
+    const inspUnicos = new Set(reportes.map(r => r['Inspector']).filter(Boolean)).size;
+    document.getElementById('statInspectores').textContent = inspUnicos;
+}
+
+// Mapa de colores por módulo
+function getBadgeClass(modulo) {
+    const m = (modulo || '').toLowerCase();
+    if (m.includes('medidor'))    return 'badge-medidor';
+    if (m.includes('error'))      return 'badge-error';
+    if (m.includes('consumo'))    return 'badge-consumo';
+    if (m.includes('reubicacion'))return 'badge-reubicacion';
+    if (m.includes('poste'))      return 'badge-postes';
+    if (m.includes('inspector'))  return 'badge-inspector';
+    if (m.includes('factura'))    return 'badge-factura';
+    if (m.includes('moto'))       return 'badge-moto';
+    return 'badge-default';
+}
+
 function renderDashboard(reportes) {
     const contador = document.getElementById('supervisorContador');
     const lista    = document.getElementById('supervisorLista');
@@ -2895,33 +2961,35 @@ function renderDashboard(reportes) {
     }
 
     lista.innerHTML = reportes.map((r, idx) => {
-        const modulo   = r['Módulo'] || r['Modulo'] || '';
+        const modulo    = r['Módulo'] || r['Modulo'] || 'Reporte';
         const inspector = r['Inspector'] || r['Usuario'] || '—';
-        const fecha    = r['Fecha'] || r['Fecha Registro'] || '';
-        const id       = r['ID'] || idx;
+        const fecha     = r['Fecha'] || '';
+        const fechaReg  = r['Fecha Registro'] || '';
+        const id        = r['ID'] || idx;
+        const badgeClass = getBadgeClass(modulo);
 
         const campos = buildCamposReporte(r);
         const fotos  = buildFotosReporte(r);
-        const pdf    = r['PDF'] ? `<a href="${r['PDF']}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 16px;background:var(--primary-light);color:var(--primary);border-radius:8px;font-weight:600;font-size:13px;text-decoration:none;">📥 Ver PDF</a>` : '';
+        const pdf    = r['PDF']
+            ? `<a href="${r['PDF']}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:10px 18px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;box-shadow:0 2px 8px rgba(37,99,235,0.3);">📥 Ver PDF</a>`
+            : '';
 
         return `
         <div class="reporte-card">
             <div class="reporte-card-header" onclick="toggleReporte('r${id}')">
-                <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
-                    <span class="reporte-badge">📄 ${modulo}</span>
-                    <span style="font-size:13px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                        ${inspector} · ${fecha}
-                    </span>
+                <div class="reporte-card-header-info">
+                    <div class="reporte-card-header-top">
+                        <span class="reporte-badge ${badgeClass}">${modulo}</span>
+                    </div>
+                    <div class="reporte-card-header-sub">👷 ${inspector} · 📅 ${fecha || fechaReg}</div>
                 </div>
-                <span style="font-size:18px;color:var(--gray-400);" id="arrow_r${id}">▼</span>
+                <span class="reporte-arrow" id="arrow_r${id}">▼</span>
             </div>
             <div class="reporte-card-body" id="body_r${id}">
-                ${campos}
+                <div class="reporte-campos-grid">${campos}</div>
                 ${fotos}
                 ${pdf}
-                <div style="margin-top:10px;font-size:12px;color:var(--gray-400);">
-                    Registrado: ${r['Fecha Registro'] || ''}
-                </div>
+                ${fechaReg ? `<div style="margin-top:10px;font-size:11px;color:var(--gray-400);">🕐 Registrado: ${fechaReg}</div>` : ''}
             </div>
         </div>`;
     }).join('');
@@ -2932,7 +3000,7 @@ function toggleReporte(id) {
     const arrow = document.getElementById('arrow_' + id);
     if (!body) return;
     const open = body.classList.toggle('open');
-    arrow.textContent = open ? '▲' : '▼';
+    if (arrow) arrow.classList.toggle('open', open);
 }
 
 // Columnas a mostrar y sus etiquetas
@@ -2947,15 +3015,19 @@ const CAMPOS_LABEL = {
     'Cantidad Fotos':'Cantidad de fotos',
 };
 
+// Campos que ocupan ancho completo
+const CAMPOS_FULL = ['Observaciones', 'Google Maps'];
+
 function buildCamposReporte(r) {
     return Object.entries(CAMPOS_LABEL)
         .filter(([k]) => r[k] !== undefined && r[k] !== null && r[k] !== '')
         .map(([k, label]) => {
             const v = r[k];
             const display = k === 'Google Maps' && v
-                ? `<a href="${v}" target="_blank" style="color:var(--primary);">Ver en mapa</a>`
+                ? `<a href="${v}" target="_blank" style="color:var(--primary);font-weight:600;">📍 Ver en mapa</a>`
                 : v;
-            return `<div class="reporte-campo"><strong>${label}:</strong><span>${display}</span></div>`;
+            const fullClass = CAMPOS_FULL.includes(k) ? ' reporte-campo-full' : '';
+            return `<div class="reporte-campo${fullClass}"><strong>${label}</strong><span>${display}</span></div>`;
         }).join('');
 }
 
@@ -2966,9 +3038,27 @@ function buildFotosReporte(r) {
         if (url && url.startsWith('http')) fotos.push(url);
     }
     if (fotos.length === 0) return '';
-    return `<div class="reporte-fotos" style="margin-top:12px;">${fotos.map(url =>
-        `<a href="${url}" target="_blank"><img src="${url}" alt="foto" onerror="this.style.display='none'"></a>`
-    ).join('')}</div>`;
+
+    // Convertir URL de Drive a thumbnail si no lo es ya
+    const toThumb = (url) => {
+        const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+        if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w600`;
+        return url;
+    };
+
+    return `
+    <div style="margin-top:14px;">
+        <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">📷 Fotografías</div>
+        <div class="reporte-fotos">
+            ${fotos.map((url, i) => {
+                const thumb = toThumb(url);
+                return `<div class="reporte-foto-item" onclick="verFotoGrande('${thumb}')">
+                    <img src="${thumb}" alt="Foto ${i+1}" onerror="this.parentElement.innerHTML='<span style=font-size:11px;color:#999>Sin vista previa</span>'">
+                    <div class="reporte-foto-overlay">🔍</div>
+                </div>`;
+            }).join('')}
+        </div>
+    </div>`;
 }
 
 function verFotoGrande(src) {
@@ -2976,10 +3066,13 @@ function verFotoGrande(src) {
     if (!modal) {
         modal = document.createElement('div');
         modal.id = 'fotoGrandeModal';
-        modal.style.cssText = 'position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;cursor:zoom-out;';
-        modal.onclick = () => modal.style.display = 'none';
         document.body.appendChild(modal);
     }
-    modal.innerHTML = `<img src="${src}" style="max-width:95vw;max-height:95vh;border-radius:8px;object-fit:contain;">`;
+    modal.innerHTML = `
+        <span class="foto-modal-close" onclick="document.getElementById('fotoGrandeModal').style.display='none'">✕</span>
+        <img src="${src}" alt="Foto">
+        <a href="${src}" target="_blank" style="color:white;font-size:13px;opacity:0.7;text-decoration:underline;">Abrir en Drive</a>
+    `;
     modal.style.display = 'flex';
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
 }

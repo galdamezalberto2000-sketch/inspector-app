@@ -704,40 +704,53 @@
                 </div>
             </div>
             <div class="content">
-                <!-- Filtros -->
-                <div class="form-card" style="margin-bottom:16px;">
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end;">
-                        <div>
-                            <label style="font-size:12px;font-weight:600;color:var(--gray-600);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Módulo</label>
-                            <select id="filtroModulo" onchange="renderDashboard()" style="width:100%;padding:10px 12px;border:2px solid var(--gray-200);border-radius:8px;font-size:14px;">
-                                <option value="">Todos</option>
-                                <option value="Medidor">Medidores</option>
-                                <option value="Error">Errores en campo</option>
-                                <option value="Consumo">Bajo consumo</option>
-                                <option value="Reubicacion">Reubicación</option>
-                                <option value="Postes">Postes derribados</option>
-                                <option value="Inspector">Informe inspector</option>
-                                <option value="Factura">Facturas</option>
-                                <option value="MotoViaje">Moto - Viaje</option>
-                                <option value="MotoInspeccion">Moto - Inspección</option>
-                                <option value="MotoGastos">Moto - Gastos</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="font-size:12px;font-weight:600;color:var(--gray-600);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Inspector</label>
-                            <select id="filtroInspector" onchange="renderDashboard()" style="width:100%;padding:10px 12px;border:2px solid var(--gray-200);border-radius:8px;font-size:14px;">
-                                <option value="">Todos</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="font-size:12px;font-weight:600;color:var(--gray-600);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:6px;">Fecha</label>
-                            <input type="date" id="filtroFecha" onchange="renderDashboard()" style="width:100%;padding:10px 12px;border:2px solid var(--gray-200);border-radius:8px;font-size:14px;">
-                        </div>
-                        <button onclick="limpiarFiltros()" style="padding:10px 16px;background:var(--gray-100);border:2px solid var(--gray-300);border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;color:var(--gray-600);">✕ Limpiar</button>
+
+                <!-- Stats -->
+                <div class="sup-stats">
+                    <div class="sup-stat">
+                        <div class="stat-num" id="statTotal">—</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="sup-stat" style="border-top-color:#16a34a;">
+                        <div class="stat-num" style="color:#16a34a;" id="statHoy">—</div>
+                        <div class="stat-label">Hoy</div>
+                    </div>
+                    <div class="sup-stat" style="border-top-color:#7c3aed;">
+                        <div class="stat-num" style="color:#7c3aed;" id="statInspectores">—</div>
+                        <div class="stat-label">Inspectores</div>
                     </div>
                 </div>
+
+                <!-- Filtros -->
+                <div class="sup-filtros">
+                    <div class="sup-filtros-title">🔍 Filtrar reportes</div>
+                    <div class="sup-filtros-grid">
+                        <select id="filtroModulo" onchange="aplicarFiltros()">
+                            <option value="">📂 Todos los módulos</option>
+                            <option value="Medidor">📡 Medidores</option>
+                            <option value="Error">⚠️ Errores en campo</option>
+                            <option value="Consumo">⚡ Bajo consumo</option>
+                            <option value="Reubicacion">📍 Reubicación</option>
+                            <option value="Postes">🪵 Postes derribados</option>
+                            <option value="Inspector">📋 Informe inspector</option>
+                            <option value="Factura">🧾 Facturas</option>
+                            <option value="MotoViaje">🛣️ Moto - Viaje</option>
+                            <option value="MotoInspeccion">🔍 Moto - Inspección</option>
+                            <option value="MotoGastos">💰 Moto - Gastos</option>
+                        </select>
+                        <select id="filtroInspector" onchange="aplicarFiltros()">
+                            <option value="">👷 Todos los inspectores</option>
+                        </select>
+                        <input type="date" id="filtroFecha" onchange="aplicarFiltros()" placeholder="Fecha">
+                        <input type="text" id="filtroTexto" oninput="aplicarFiltros()" placeholder="🔎 Buscar...">
+                    </div>
+                    <div class="sup-filtros-actions">
+                        <button class="btn-filtro-limpiar" onclick="limpiarFiltros()">✕ Limpiar filtros</button>
+                    </div>
+                </div>
+
                 <!-- Contador -->
-                <div id="supervisorContador" style="font-size:13px;color:var(--gray-500);margin-bottom:12px;"></div>
+                <div class="sup-contador" id="supervisorContador"></div>
                 <!-- Lista reportes -->
                 <div id="supervisorLista"></div>
             </div>
@@ -796,6 +809,7 @@
                 <canvas id="cameraCanvas" style="display:none;"></canvas>
                 <div class="camera-controls">
                     <button type="button" class="btn-save" onclick="capturePhoto()">Capturar</button>
+                    <button type="button" class="btn-secondary-light" onclick="voltearCamara()">🔄 Voltear</button>
                     <button type="button" class="btn-secondary-light" onclick="closeCamera()">Cancelar</button>
                 </div>
             </div>
