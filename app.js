@@ -2816,24 +2816,10 @@ inicializarSelectsInspector();
 
 // ==================== PANEL SUPERVISOR ====================
 
-const MODULO_INFO = {
-    Medidor:       { label: 'Medidor fuera de línea', emoji: '📡' },
-    Error:         { label: 'Error en campo',          emoji: '⚠️' },
-    Consumo:       { label: 'Bajo consumo',            emoji: '⚡' },
-    Reubicacion:   { label: 'Reubicación',             emoji: '📍' },
-    Postes:        { label: 'Postes derribados',       emoji: '🪵' },
-    Inspector:     { label: 'Informe inspector',       emoji: '📋' },
-    Factura:       { label: 'Factura',                 emoji: '🧾' },
-    MotoViaje:     { label: 'Moto - Viaje',            emoji: '🛣️' },
-    MotoInspeccion:{ label: 'Moto - Inspección',       emoji: '🔍' },
-    MotoGastos:    { label: 'Moto - Gastos',           emoji: '💰' },
-};
-
 function showSupervisorScreen() {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById('supervisorScreen').classList.add('active');
-    poblarFiltroInspectores();
-    renderDashboard();
+    cargarReportesSupervisor();
 }
 
 function cerrarSesionSupervisor() {
@@ -2844,67 +2830,97 @@ function cerrarSesionSupervisor() {
     loginScreen.classList.add('active');
 }
 
-function poblarFiltroInspectores() {
-    const reportes = getReportes();
-    const inspectores = [...new Set(reportes.map(r => r.inspector).filter(Boolean))].sort();
+function limpiarFiltros() {
+    document.getElementById('filtroModulo').value = '';
+    document.getElementById('filtroInspector').value = '';
+    document.getElementById('filtroFecha').value = '';
+    cargarReportesSupervisor();
+}
+
+// Carga reportes desde Google Sheets via GAS
+async function cargarReportesSupervisor() {
+    const lista    = document.getElementById('supervisorLista');
+    const contador = document.getElementById('supervisorContador');
+    lista.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><p>Cargando reportes...</p></div>';
+    contador.textContent = '';
+
+    const modulo    = document.getElementById('filtroModulo').value;
+    const inspector = document.getElementById('filtroInspector').value;
+    const fecha     = document.getElementById('filtroFecha').value;
+
+    try {
+        const payload = { accion: 'obtenerReportes', modulo, inspector, fecha };
+        const res = await fetch(GAS_URL_FIJA, {
+            method: 'POST',
+            redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify(payload)
+        });
+        const text = await res.text();
+        const data = JSON.parse(text);
+
+        if (!data.success) throw new Error(data.error || 'Error desconocido');
+
+        renderDashboard(data.reportes);
+        poblarFiltroInspectores(data.reportes);
+
+    } catch(err) {
+        lista.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>No se pudo conectar al servidor.<br><small>${err.message}</small></p></div>`;
+        contador.textContent = '';
+    }
+}
+
+function poblarFiltroInspectores(reportes) {
+    const inspectores = [...new Set(reportes.map(r => r['Inspector']).filter(Boolean))].sort();
     const sel = document.getElementById('filtroInspector');
+    const actual = sel.value;
     while (sel.options.length > 1) sel.remove(1);
     inspectores.forEach(n => {
         const opt = document.createElement('option');
         opt.value = n; opt.textContent = n;
         sel.appendChild(opt);
     });
+    if (actual) sel.value = actual;
 }
 
-function limpiarFiltros() {
-    document.getElementById('filtroModulo').value = '';
-    document.getElementById('filtroInspector').value = '';
-    document.getElementById('filtroFecha').value = '';
-    renderDashboard();
-}
-
-function renderDashboard() {
-    const modulo    = document.getElementById('filtroModulo').value;
-    const inspector = document.getElementById('filtroInspector').value;
-    const fecha     = document.getElementById('filtroFecha').value;
-
-    let reportes = getReportes();
-
-    if (modulo)    reportes = reportes.filter(r => r.modulo === modulo);
-    if (inspector) reportes = reportes.filter(r => r.inspector === inspector);
-    if (fecha)     reportes = reportes.filter(r => (r.fecha || r.fechaGeneracion || r.fechaRegistro || '').includes(fecha));
-
+function renderDashboard(reportes) {
     const contador = document.getElementById('supervisorContador');
-    contador.textContent = `${reportes.length} reporte${reportes.length !== 1 ? 's' : ''} encontrado${reportes.length !== 1 ? 's' : ''}`;
+    const lista    = document.getElementById('supervisorLista');
 
-    const lista = document.getElementById('supervisorLista');
+    contador.textContent = `${reportes.length} reporte${reportes.length !== 1 ? 's' : ''} encontrado${reportes.length !== 1 ? 's' : ''}`;
 
     if (reportes.length === 0) {
         lista.innerHTML = `<div class="empty-state"><div class="empty-icon">📂</div><p>No hay reportes que coincidan</p></div>`;
         return;
     }
 
-    lista.innerHTML = reportes.map(r => {
-        const info = MODULO_INFO[r.modulo] || { label: r.modulo, emoji: '📄' };
+    lista.innerHTML = reportes.map((r, idx) => {
+        const modulo   = r['Módulo'] || r['Modulo'] || '';
+        const inspector = r['Inspector'] || r['Usuario'] || '—';
+        const fecha    = r['Fecha'] || r['Fecha Registro'] || '';
+        const id       = r['ID'] || idx;
+
         const campos = buildCamposReporte(r);
         const fotos  = buildFotosReporte(r);
+        const pdf    = r['PDF'] ? `<a href="${r['PDF']}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 16px;background:var(--primary-light);color:var(--primary);border-radius:8px;font-weight:600;font-size:13px;text-decoration:none;">📥 Ver PDF</a>` : '';
 
         return `
         <div class="reporte-card">
-            <div class="reporte-card-header" onclick="toggleReporte(${r.id})">
+            <div class="reporte-card-header" onclick="toggleReporte('r${id}')">
                 <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
-                    <span class="reporte-badge">${info.emoji} ${info.label}</span>
-                    <span style="font-size:13px;color:var(--gray-600);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                        ${r.inspector || r.usuario || '—'} · ${r.fecha || r.fechaGeneracion || r.fechaRegistro || ''}
+                    <span class="reporte-badge">📄 ${modulo}</span>
+                    <span style="font-size:13px;color:var(--gray-600);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                        ${inspector} · ${fecha}
                     </span>
                 </div>
-                <span style="font-size:18px;color:var(--gray-400);" id="arrow_${r.id}">▼</span>
+                <span style="font-size:18px;color:var(--gray-400);" id="arrow_r${id}">▼</span>
             </div>
-            <div class="reporte-card-body" id="body_${r.id}">
+            <div class="reporte-card-body" id="body_r${id}">
                 ${campos}
                 ${fotos}
-                <div style="margin-top:12px;font-size:12px;color:var(--gray-400);">
-                    Registrado: ${r.fechaRegistro} · Usuario: ${r.usuario}
+                ${pdf}
+                <div style="margin-top:10px;font-size:12px;color:var(--gray-400);">
+                    Registrado: ${r['Fecha Registro'] || ''}
                 </div>
             </div>
         </div>`;
@@ -2914,50 +2930,44 @@ function renderDashboard() {
 function toggleReporte(id) {
     const body  = document.getElementById('body_' + id);
     const arrow = document.getElementById('arrow_' + id);
-    const open  = body.classList.toggle('open');
+    if (!body) return;
+    const open = body.classList.toggle('open');
     arrow.textContent = open ? '▲' : '▼';
 }
 
+// Columnas a mostrar y sus etiquetas
+const CAMPOS_LABEL = {
+    'Inspector':'Inspector', 'Usuario':'Usuario', 'Fecha':'Fecha',
+    'Clave':'Clave', 'N° Medidor':'N° Medidor', 'Observaciones':'Observaciones',
+    'Latitud':'Latitud', 'Longitud':'Longitud', 'Google Maps':'Google Maps',
+    'Km Inicial':'Km inicial', 'Km Final':'Km final', 'Km Recorridos':'Km recorridos',
+    'Tipo Gasto':'Tipo de gasto', 'Descripción':'Descripción', 'Valor':'Valor',
+    'Identidad':'Identidad', 'Lectura Correcta':'Lectura correcta',
+    'Lectura Incorrecta':'Lectura incorrecta', 'Contiguo':'Contiguo',
+    'Cantidad Fotos':'Cantidad de fotos',
+};
+
 function buildCamposReporte(r) {
-    const skip = ['id','modulo','fechaRegistro','usuario','foto','fotoFactura','fotoMoto',
-        'fotoFachada','fotoMedidor','fotoTablero','fotoMotoCompleta','fotos','fotosFotos',
-        'fotos','fotoFacturas'];
-    const map = {
-        inspector:'Inspector', fecha:'Fecha', clave:'Clave', numMedidor:'N° Medidor',
-        contiguo:'Contiguo', observaciones:'Observaciones', lat:'Latitud', lng:'Longitud',
-        lecturaCorrecta:'Lectura correcta', lecturaIncorrecta:'Lectura incorrecta',
-        kmInicial:'Km inicial', kmFinal:'Km final', kmRecorridos:'Km recorridos',
-        tipo:'Tipo', descripcion:'Descripción', valor:'Valor', identidad:'Identidad',
-        fechaGeneracion:'Fecha generación', fechaFactura:'Fecha factura',
-    };
-    return Object.entries(r)
-        .filter(([k, v]) => map[k] && v !== null && v !== undefined && v !== '')
-        .map(([k, v]) => `<div class="reporte-campo"><strong>${map[k]}:</strong><span>${v}</span></div>`)
-        .join('');
+    return Object.entries(CAMPOS_LABEL)
+        .filter(([k]) => r[k] !== undefined && r[k] !== null && r[k] !== '')
+        .map(([k, label]) => {
+            const v = r[k];
+            const display = k === 'Google Maps' && v
+                ? `<a href="${v}" target="_blank" style="color:var(--primary);">Ver en mapa</a>`
+                : v;
+            return `<div class="reporte-campo"><strong>${label}:</strong><span>${display}</span></div>`;
+        }).join('');
 }
 
 function buildFotosReporte(r) {
-    const fotoFields = [
-        r.foto, r.fotoFactura, r.fotoMoto, r.fotoFachada, r.fotoMedidor,
-        r.fotoTablero, r.fotoMotoCompleta,
-        ...(r.fotos || []),
-        ...(r.fotos ? [] : []),
-        // moto inspeccion
-        r.fotos?.moto, r.fotos?.retro, r.fotos?.llantas,
-        r.fotos?.lucesDB, r.fotos?.lucesDA, r.fotos?.lucesTF, r.fotos?.lucesTP,
-        r.fotoFacturas,
-    ].filter(Boolean);
-
-    // También fotos de inspección moto guardadas como objeto
-    if (r.fotos && typeof r.fotos === 'object' && !Array.isArray(r.fotos)) {
-        Object.values(r.fotos).filter(Boolean).forEach(f => {
-            if (!fotoFields.includes(f)) fotoFields.push(f);
-        });
+    const fotos = [];
+    for (let i = 1; i <= 7; i++) {
+        const url = r[`Foto ${i}`];
+        if (url && url.startsWith('http')) fotos.push(url);
     }
-
-    if (fotoFields.length === 0) return '';
-    return `<div class="reporte-fotos">${fotoFields.map(f =>
-        `<img src="${f}" alt="foto" onclick="verFotoGrande('${f}')">`
+    if (fotos.length === 0) return '';
+    return `<div class="reporte-fotos" style="margin-top:12px;">${fotos.map(url =>
+        `<a href="${url}" target="_blank"><img src="${url}" alt="foto" onerror="this.style.display='none'"></a>`
     ).join('')}</div>`;
 }
 
