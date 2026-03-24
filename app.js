@@ -38,12 +38,16 @@ async function enviarPorCorreo(tipo, campos) {
     console.log('Tamaño payload KB:', Math.round(JSON.stringify(payload).length / 1024));
 
     // GAS requiere redirect:'follow' para funcionar desde móviles sin proxy
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
     const res = await fetch(url, {
       method: 'POST',
       redirect: 'follow',
-      headers: { 'Content-Type': 'text/plain' }, // text/plain evita preflight CORS
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload),
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
     const text = await res.text();
     try {
       const data = JSON.parse(text);
