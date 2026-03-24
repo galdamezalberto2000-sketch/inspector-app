@@ -2032,7 +2032,8 @@ document.getElementById('postesForm').addEventListener('submit', async (e) => {
     document.getElementById('postesCoordsBox').innerHTML = '<p>Sin coordenadas</p>';
     document.querySelector('#postesScreen .btn-coords').textContent = '📍 Obtener Ubicación';
     document.getElementById('postesFecha').value = new Date().toLocaleString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
-    btn.textContent = '� Enviar Reporte'; btn.disabled = false;
+    btn.textContent = '📤 Enviar Reporte'; btn.disabled = false;
+    generarPDFPostes(r);
     alert('✅ Reporte enviado al correo correctamente.');
 });
 
