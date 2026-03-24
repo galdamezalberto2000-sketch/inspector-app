@@ -555,7 +555,7 @@ inspectorForm.addEventListener('submit', async (e) => {
         fotoFactura: facturaPhoto, fotoMoto: motoPhoto
     });
 
-    const ok = await enviarPorCorreo('📋 Informe de Inspector - ' + currentUser, {
+    enviarEnSegundoPlano('📋 Informe de Inspector - ' + currentUser, {
         'Usuario':          currentUser,
         'Fecha_Generacion': fechaGeneracion,
         'Fecha_Factura':    fechaFactura,
@@ -571,7 +571,7 @@ inspectorForm.addEventListener('submit', async (e) => {
     document.getElementById('motoPreview').innerHTML = '<p>No hay foto</p>';
     btn.textContent = '📤 Enviar Informe';
     btn.disabled = false;
-    alert(ok ? '✅ Informe enviado al correo correctamente.' : '⚠️ No se pudo enviar. Revisa tu conexión.');
+    alert('✅ Informe guardado. Correo enviándose en segundo plano.');
 });
 
 // Función para generar PDF y enviar por correo usando FormSubmit
