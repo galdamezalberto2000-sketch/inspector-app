@@ -483,6 +483,15 @@ function capturePhoto() {
     } else if (currentPhotoType === 'gastosFactura') {
         gastosFacturaFoto = photoData;
         document.getElementById('gastosFacturaPreview').innerHTML = `<img src="${photoData}" alt="Factura">`;
+    } else if (currentPhotoType === 'cascoCasco') {
+        cascoCascoFoto = photoData;
+        document.getElementById('cascoCascoPreview').innerHTML = `<img src="${photoData}" alt="Casco">`;
+    } else if (currentPhotoType === 'cascoVisera') {
+        cascoViseraFoto = photoData;
+        document.getElementById('cascoViseraPreview').innerHTML = `<img src="${photoData}" alt="Visera">`;
+    } else if (currentPhotoType === 'cascoSeguro') {
+        cascoSeguroFoto = photoData;
+        document.getElementById('cascoSeguroPreview').innerHTML = `<img src="${photoData}" alt="Seguro">`;
     }
     
     closeCamera();
@@ -533,6 +542,12 @@ function openGallery(type) {
         document.getElementById('inspeccionLucesTPGallery').click();
     } else if (type === 'gastosFactura') {
         document.getElementById('gastosFacturaGallery').click();
+    } else if (type === 'cascoCasco') {
+        document.getElementById('cascoCascoGallery').click();
+    } else if (type === 'cascoVisera') {
+        document.getElementById('cascoViseraGallery').click();
+    } else if (type === 'cascoSeguro') {
+        document.getElementById('cascoSeguroGallery').click();
     }
 }
 
@@ -2397,6 +2412,9 @@ let inspeccionLucesDAFoto = null;
 let inspeccionLucesTFFoto = null;
 let inspeccionLucesTPFoto = null;
 let gastosFacturaFoto = null;
+let cascoCascoFoto = null;
+let cascoViseraFoto = null;
+let cascoSeguroFoto = null;
 
 // Abrir pantalla moto — manejado directamente en openOption
 
@@ -2408,7 +2426,7 @@ function mostrarTabMoto(tab) {
     document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'block';
 
     const tabs = document.querySelectorAll('.moto-tab');
-    const idx = ['viaje', 'inspeccion', 'gastos'].indexOf(tab);
+    const idx = ['viaje', 'inspeccion', 'gastos', 'casco'].indexOf(tab);
     if (tabs[idx]) tabs[idx].classList.add('active');
 }
 
@@ -2429,6 +2447,9 @@ function mostrarTabMoto(tab) {
     ['inspeccionLucesTFGallery', 'inspeccionLucesTFPreview', (d) => { inspeccionLucesTFFoto = d; }],
     ['inspeccionLucesTPGallery', 'inspeccionLucesTPPreview', (d) => { inspeccionLucesTPFoto = d; }],
     ['gastosFacturaGallery',   'gastosFacturaPreview',   (d) => { gastosFacturaFoto = d; }],
+    ['cascoCascoGallery',      'cascoCascoPreview',      (d) => { cascoCascoFoto = d; }],
+    ['cascoViseraGallery',     'cascoViseraPreview',     (d) => { cascoViseraFoto = d; }],
+    ['cascoSeguroGallery',     'cascoSeguroPreview',     (d) => { cascoSeguroFoto = d; }],
 ].forEach(([galleryId, previewId, setter]) => {
     document.getElementById(galleryId).addEventListener('change', (e) => {
         const file = e.target.files[0];
@@ -2787,6 +2808,113 @@ function generarPDFMotoGastos(r) {
     pdf.text('Documento generado automáticamente por Inspector App', 105, 287, { align: 'center' });
 
     pdf.save(`Gasto_${r.tipo}_${r.inspector}_${r.fecha}.pdf`);
+}
+
+// ==================== CASCO ====================
+
+document.getElementById('motoCascoForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const inspector = document.getElementById('cascoInspector').value;
+    const fecha = document.getElementById('cascoFecha').value;
+    const observaciones = document.getElementById('cascoObservaciones').value.trim();
+
+    if (!cascoCascoFoto && !cascoViseraFoto && !cascoSeguroFoto) {
+        alert('Por favor agrega al menos una foto'); return;
+    }
+
+    const btn = document.querySelector('#motoCascoForm .btn-save');
+    btn.textContent = '⏳ Enviando...'; btn.disabled = true;
+
+    guardarReporte('MotoCasco', { inspector, fecha, observaciones,
+        fotoCasco: cascoCascoFoto, fotoVisera: cascoViseraFoto, fotoSeguro: cascoSeguroFoto });
+
+    enviarEnSegundoPlano('⛑️ Inspección Casco - ' + inspector, {
+        'Inspector': inspector,
+        'Fecha': fecha,
+        'Observaciones': observaciones || 'Ninguna',
+        'Modulo': 'Inspección de Moto - Casco',
+        ...(cascoCascoFoto  ? { 'Foto_Casco':   cascoCascoFoto }  : {}),
+        ...(cascoViseraFoto ? { 'Foto_Visera':  cascoViseraFoto } : {}),
+        ...(cascoSeguroFoto ? { 'Foto_Seguro':  cascoSeguroFoto } : {}),
+    });
+
+    generarPDFMotoCasco({ inspector, fecha, observaciones,
+        fotoCasco: cascoCascoFoto, fotoVisera: cascoViseraFoto, fotoSeguro: cascoSeguroFoto });
+
+    document.getElementById('motoCascoForm').reset();
+    cascoCascoFoto = null; cascoViseraFoto = null; cascoSeguroFoto = null;
+    document.getElementById('cascoCascoPreview').innerHTML = '<p>No hay foto</p>';
+    document.getElementById('cascoViseraPreview').innerHTML = '<p>No hay foto</p>';
+    document.getElementById('cascoSeguroPreview').innerHTML = '<p>No hay foto</p>';
+    document.getElementById('cascoFecha').value = new Date().toISOString().split('T')[0];
+    btn.textContent = '📤 Enviar Inspección de Casco'; btn.disabled = false;
+    alert('✅ Inspección de casco guardada y PDF descargado. Correo enviándose en segundo plano.');
+});
+
+function generarPDFMotoCasco(r) {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
+    const color = [37, 99, 235];
+
+    pdf.setFillColor(color[0], color[1], color[2]);
+    pdf.rect(0, 0, 210, 42, 'F');
+    pdf.setTextColor(255, 255, 255);
+    pdf.setFontSize(20);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('INSPECCIÓN DE CASCO', 105, 18, { align: 'center' });
+    pdf.setFontSize(11);
+    pdf.setFont(undefined, 'normal');
+    pdf.text(new Date().toLocaleDateString('es-ES'), 105, 30, { align: 'center' });
+
+    let y = 55;
+    pdf.setTextColor(0, 0, 0);
+    pdf.setFontSize(13);
+    pdf.setFont(undefined, 'bold');
+    pdf.text('DATOS DE INSPECCIÓN', 20, y); y += 10;
+
+    pdf.setFontSize(11);
+    [['Inspector', r.inspector], ['Fecha', r.fecha]].forEach(([l, v]) => {
+        pdf.setFont(undefined, 'bold'); pdf.text(`${l}:`, 20, y);
+        pdf.setFont(undefined, 'normal'); pdf.text(String(v), 75, y); y += 9;
+    });
+
+    if (r.observaciones) {
+        pdf.setFont(undefined, 'bold'); pdf.text('Observaciones:', 20, y); y += 7;
+        pdf.setFont(undefined, 'normal');
+        const lines = pdf.splitTextToSize(r.observaciones, 170);
+        pdf.text(lines, 20, y); y += lines.length * 7;
+    }
+
+    y += 5;
+    pdf.setDrawColor(color[0], color[1], color[2]);
+    pdf.setLineWidth(0.5);
+    pdf.line(20, y, 190, y); y += 10;
+
+    const fotos = [
+        [r.fotoCasco,  'FOTO DEL CASCO'],
+        [r.fotoVisera, 'FOTO VISERA LEVANTADA'],
+        [r.fotoSeguro, 'FOTO SEGURO DEL CASCO PUESTO'],
+    ].filter(([foto]) => foto);
+
+    let col = 0;
+    fotos.forEach(([foto, label]) => {
+        if (y + 75 > 270) { pdf.addPage(); y = 20; col = 0; }
+        const x = col === 0 ? 20 : 110;
+        pdf.setFontSize(9);
+        pdf.setFont(undefined, 'bold');
+        pdf.setTextColor(color[0], color[1], color[2]);
+        pdf.text(label, x, y);
+        try { pdf.addImage(foto, 'JPEG', x, y + 3, 80, 68); } catch(e) {}
+        col++;
+        if (col === 2) { col = 0; y += 78; }
+    });
+
+    pdf.setFontSize(9);
+    pdf.setTextColor(150, 150, 150);
+    pdf.setFont(undefined, 'italic');
+    pdf.text('Documento generado automáticamente por Inspector App', 105, 287, { align: 'center' });
+
+    pdf.save(`Casco_${r.inspector}_${r.fecha}.pdf`);
 }
 
 

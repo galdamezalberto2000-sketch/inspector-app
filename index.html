@@ -545,6 +545,7 @@
                     <button class="moto-tab active" onclick="mostrarTabMoto('viaje')">🛣️ Viaje</button>
                     <button class="moto-tab" onclick="mostrarTabMoto('inspeccion')">🔍 Inspección</button>
                     <button class="moto-tab" onclick="mostrarTabMoto('gastos')">💰 Gastos</button>
+                    <button class="moto-tab" onclick="mostrarTabMoto('casco')">⛑️ Casco</button>
                 </div>
 
                 <!-- Tab Viaje -->
@@ -731,6 +732,74 @@
                         </form>
                     </div>
                 </div>
+
+                <!-- Tab Casco -->
+                <div id="tabCasco" class="moto-tab-content" style="display:none;">
+                    <div class="form-card">
+                        <form id="motoCascoForm">
+                            <div class="form-group">
+                                <label for="cascoInspector">Inspector</label>
+                                <select id="cascoInspector" required>
+                                    <option value="">-- Seleccionar --</option>
+                                    <optgroup label="Sub-Sede La Entrada Copán">
+                                        <option>Axel Rosendo</option>
+                                        <option>Cristian Balderramos</option>
+                                        <option>Cristian Sarmiento</option>
+                                        <option>Denis Bueso</option>
+                                        <option>Joaquin Rodriguez</option>
+                                        <option>Marvin Bojorge</option>
+                                        <option>Mario Polanco</option>
+                                        <option>Victor Santos</option>
+                                    </optgroup>
+                                    <optgroup label="Sub-Sede Copán Ruinas">
+                                        <option>Denilson Pineda</option>
+                                        <option>Erlin Lara</option>
+                                        <option>Luis Arita</option>
+                                        <option>Luis Vega</option>
+                                        <option>Orlin Rosales</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="cascoFecha">Fecha</label>
+                                <input type="date" id="cascoFecha" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Foto del Casco</label>
+                                <div class="photo-preview" id="cascoCascoPreview"><p>No hay foto</p></div>
+                                <div class="photo-buttons">
+                                    <button type="button" class="btn-photo" onclick="openCamera('cascoCasco')">📷 Tomar Foto</button>
+                                    <button type="button" class="btn-photo" onclick="openGallery('cascoCasco')">🖼️ Galería</button>
+                                </div>
+                                <input type="file" id="cascoCascoGallery" accept="image/*" style="display:none;">
+                            </div>
+                            <div class="form-group">
+                                <label>Foto Visera Levantada</label>
+                                <div class="photo-preview" id="cascoViseraPreview"><p>No hay foto</p></div>
+                                <div class="photo-buttons">
+                                    <button type="button" class="btn-photo" onclick="openCamera('cascoVisera')">📷 Tomar Foto</button>
+                                    <button type="button" class="btn-photo" onclick="openGallery('cascoVisera')">🖼️ Galería</button>
+                                </div>
+                                <input type="file" id="cascoViseraGallery" accept="image/*" style="display:none;">
+                            </div>
+                            <div class="form-group">
+                                <label>Foto Seguro del Casco Puesto</label>
+                                <div class="photo-preview" id="cascoSeguroPreview"><p>No hay foto</p></div>
+                                <div class="photo-buttons">
+                                    <button type="button" class="btn-photo" onclick="openCamera('cascoSeguro')">📷 Tomar Foto</button>
+                                    <button type="button" class="btn-photo" onclick="openGallery('cascoSeguro')">🖼️ Galería</button>
+                                </div>
+                                <input type="file" id="cascoSeguroGallery" accept="image/*" style="display:none;">
+                            </div>
+                            <div class="form-group">
+                                <label for="cascoObservaciones">Observaciones</label>
+                                <textarea id="cascoObservaciones" rows="3" placeholder="Observaciones opcionales..."></textarea>
+                            </div>
+                            <button type="submit" class="btn-save">📤 Enviar Inspección de Casco</button>
+                        </form>
+                    </div>
+                </div>
+
             </div>
         </div>
 
