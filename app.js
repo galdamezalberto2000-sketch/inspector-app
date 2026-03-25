@@ -14,12 +14,12 @@ function getScriptURL() {
 async function enviarPorCorreo(tipo, campos) {
   const url = GAS_URL_FIJA;
 
-  const camposFotoKeys = ['Foto_Factura', 'Foto_Moto', 'Foto_Medidor', 'Foto_Fachada', 'Foto_Error'];
-
   const camposTexto = {};
   const camposFotos = {};
+
   for (const [k, v] of Object.entries(campos)) {
-    if (camposFotoKeys.includes(k) && v) {
+    // Detectar fotos por contenido base64
+    if (v && typeof v === 'string' && v.startsWith('data:image')) {
       camposFotos[k] = v;
     } else {
       camposTexto[k] = v;
@@ -31,9 +31,7 @@ async function enviarPorCorreo(tipo, campos) {
   }
 
   try {
-    const fotoKeys = Object.keys(camposFotos);
-    const payload = { tipo, ...camposTexto };
-    if (fotoKeys.length > 0) payload[fotoKeys[0]] = camposFotos[fotoKeys[0]];
+    const payload = { tipo, ...camposTexto, ...camposFotos };
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 15000);
@@ -1045,6 +1043,7 @@ document.getElementById('medidorForm').addEventListener('submit', async (e) => {
     document.getElementById('coordsBox').innerHTML = '<p id="coordsText">Sin coordenadas</p>';
     document.querySelector('#medidoresScreen .btn-coords').textContent = '📍 Obtener Ubicación';
     btn.textContent = '📤 Enviar Reporte'; btn.disabled = false;
+    generarPDFMedidor(reporte);
     alert('✅ Reporte enviado al correo correctamente.');
 });
 
@@ -1522,6 +1521,7 @@ document.getElementById('consumoForm').addEventListener('submit', async (e) => {
     document.querySelector('#consumoScreen .btn-coords').textContent = '📍 Obtener Ubicación';
     document.getElementById('consumoFecha').value = new Date().toLocaleString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
     btn.textContent = '📤 Enviar Reporte'; btn.disabled = false;
+    generarPDFConsumo(r);
     alert('✅ Reporte enviado al correo correctamente.');
 });
 
@@ -2474,7 +2474,9 @@ document.getElementById('motoViajeForm').addEventListener('submit', async (e) =>
         'Km_Final': kmFinal,
         'Km_Recorridos': kmRecorridos,
         'Modulo': 'Inspección de Moto - Viaje',
-        'Foto_Medidor': viajeTableroFoto
+        ...(viajeTableroFoto ? { 'Foto_Tablero': viajeTableroFoto } : {}),
+        ...(viajeKmInicialFoto ? { 'Foto_Km_Inicial': viajeKmInicialFoto } : {}),
+        ...(viajeKmFinalFoto ? { 'Foto_Km_Final': viajeKmFinalFoto } : {}),
     });
 
     // Generar PDF y descargar
@@ -2525,7 +2527,13 @@ document.getElementById('motoInspeccionForm').addEventListener('submit', async (
         'Fecha': fecha,
         'Observaciones': observaciones || 'Ninguna',
         'Modulo': 'Inspección de Moto - Técnica',
-        ...(fotos.moto ? { 'Foto_Medidor': fotos.moto } : {}),
+        ...(fotos.moto    ? { 'Foto_Moto_Completa': fotos.moto }    : {}),
+        ...(fotos.retro   ? { 'Foto_Retrovisores':  fotos.retro }   : {}),
+        ...(fotos.llantas ? { 'Foto_Llantas':       fotos.llantas } : {}),
+        ...(fotos.lucesDB ? { 'Foto_Luces_DB':      fotos.lucesDB } : {}),
+        ...(fotos.lucesDA ? { 'Foto_Luces_DA':      fotos.lucesDA } : {}),
+        ...(fotos.lucesTF ? { 'Foto_Luces_TF':      fotos.lucesTF } : {}),
+        ...(fotos.lucesTP ? { 'Foto_Luces_TP':      fotos.lucesTP } : {}),
     });
 
     // Generar PDF
