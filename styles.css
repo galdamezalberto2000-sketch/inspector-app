@@ -1242,3 +1242,10 @@ body {
     white-space: nowrap;
 }
 .btn-coords-manual:hover { background: #16a34a; }
+
+/* Viaje en curso */
+.viaje-en-curso {
+    border: 2px solid #f59e0b !important;
+    background: #fffbeb !important;
+}
+.viaje-en-curso h3 { margin: 0 0 12px; }

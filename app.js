@@ -309,6 +309,7 @@ function openOption(option) {
         document.getElementById('inspeccionFecha').value = hoy;
         document.getElementById('gastosFecha').value = hoy;
         mostrarTabMoto('viaje');
+        verificarViajeEnCurso();
     } else {
         const options = {
             'consumo': 'Reporte de bajo consumo',
@@ -459,6 +460,12 @@ function capturePhoto() {
     } else if (currentPhotoType === 'viajeKmFinal') {
         viajeKmFinalFoto = photoData;
         document.getElementById('viajeKmFinalPreview').innerHTML = `<img src="${photoData}" alt="Km Final">`;
+    } else if (currentPhotoType === 'viajeKmFinalTarde') {
+        viajeKmFinalTardeFoto = photoData;
+        document.getElementById('viajeKmFinalTardePreview').innerHTML = `<img src="${photoData}" alt="Km Final">`;
+    } else if (currentPhotoType === 'viajeTableroTarde') {
+        viajeTableroTardeFoto = photoData;
+        document.getElementById('viajeTableroTardePreview').innerHTML = `<img src="${photoData}" alt="Tablero">`;
     } else if (currentPhotoType === 'inspeccionMoto') {
         inspeccionMotoFoto = photoData;
         document.getElementById('inspeccionMotoPreview').innerHTML = `<img src="${photoData}" alt="Moto">`;
@@ -526,6 +533,10 @@ function openGallery(type) {
         document.getElementById('viajeKmInicialGallery').click();
     } else if (type === 'viajeKmFinal') {
         document.getElementById('viajeKmFinalGallery').click();
+    } else if (type === 'viajeKmFinalTarde') {
+        document.getElementById('viajeKmFinalTardeGallery').click();
+    } else if (type === 'viajeTableroTarde') {
+        document.getElementById('viajeTableroTardeGallery').click();
     } else if (type === 'inspeccionMoto') {
         document.getElementById('inspeccionMotoGallery').click();
     } else if (type === 'inspeccionRetro') {
@@ -2404,6 +2415,8 @@ function generarPDFFactura(r) {
 let viajeTableroFoto = null;
 let viajeKmInicialFoto = null;
 let viajeKmFinalFoto = null;
+let viajeKmFinalTardeFoto = null;
+let viajeTableroTardeFoto = null;
 let inspeccionMotoFoto = null;
 let inspeccionRetroFoto = null;
 let inspeccionLlantasFoto = null;
@@ -2439,6 +2452,8 @@ function mostrarTabMoto(tab) {
     ['viajeTableroGallery',    'viajeTableroPreview',    (d) => { viajeTableroFoto = d; }],
     ['viajeKmInicialGallery',  'viajeKmInicialPreview',  (d) => { viajeKmInicialFoto = d; }],
     ['viajeKmFinalGallery',    'viajeKmFinalPreview',    (d) => { viajeKmFinalFoto = d; }],
+    ['viajeKmFinalTardeGallery','viajeKmFinalTardePreview',(d) => { viajeKmFinalTardeFoto = d; }],
+    ['viajeTableroTardeGallery','viajeTableroTardePreview',(d) => { viajeTableroTardeFoto = d; }],
     ['inspeccionMotoGallery',  'inspeccionMotoPreview',  (d) => { inspeccionMotoFoto = d; }],
     ['inspeccionRetroGallery', 'inspeccionRetroPreview', (d) => { inspeccionRetroFoto = d; }],
     ['inspeccionLlantasGallery', 'inspeccionLlantasPreview', (d) => { inspeccionLlantasFoto = d; }],
@@ -2464,61 +2479,114 @@ function mostrarTabMoto(tab) {
     });
 });
 
-// ---- Submit: Registro de Viaje ----
+// ---- Submit: Registro de Viaje (Km Inicial - Mañana) ----
 document.getElementById('motoViajeForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    if (!viajeTableroFoto) { alert('La foto del tablero es obligatoria'); return; }
 
     const inspector = document.getElementById('viajeInspector').value.trim();
     const fecha = document.getElementById('viajeFecha').value;
     const kmInicial = document.getElementById('viajeKmInicial').value;
-    const kmFinal = document.getElementById('viajeKmFinal').value;
-    const kmRecorridos = parseFloat(kmFinal) - parseFloat(kmInicial);
 
-    if (kmRecorridos < 0) { alert('El kilometraje final debe ser mayor al inicial'); return; }
+    if (!inspector || !fecha || !kmInicial) { alert('Completa todos los campos'); return; }
 
     const btn = document.querySelector('#motoViajeForm .btn-save');
+    btn.textContent = '⏳ Guardando...'; btn.disabled = true;
+
+    // Guardar viaje en curso en localStorage
+    const viajeEnCurso = {
+        inspector, fecha, kmInicial,
+        fotoKmInicial: viajeKmInicialFoto,
+        timestamp: Date.now()
+    };
+    localStorage.setItem('viaje_en_curso', JSON.stringify(viajeEnCurso));
+
+    document.getElementById('motoViajeForm').reset();
+    viajeKmInicialFoto = null;
+    document.getElementById('viajeKmInicialPreview').innerHTML = '<p>No hay foto</p>';
+    document.getElementById('viajeFecha').value = new Date().toISOString().split('T')[0];
+    btn.textContent = '📥 Guardar Kilometraje Inicial'; btn.disabled = false;
+
+    verificarViajeEnCurso();
+    alert('✅ Kilometraje inicial guardado. Completa el registro con el kilometraje final.');
+});
+
+// Verificar si hay viaje en curso al abrir el tab
+function verificarViajeEnCurso() {
+    const viaje = JSON.parse(localStorage.getItem('viaje_en_curso') || 'null');
+    const box = document.getElementById('viajeEnCursoBox');
+    const nuevoBox = document.getElementById('viajeNuevoBox');
+    if (viaje) {
+        document.getElementById('viajeEnCursoInfo').innerHTML = `
+            <p><strong>Inspector:</strong> ${viaje.inspector}</p>
+            <p><strong>Fecha:</strong> ${viaje.fecha}</p>
+            <p><strong>Km Inicial:</strong> ${viaje.kmInicial}</p>
+            ${viaje.fotoKmInicial ? `<img src="${viaje.fotoKmInicial}" style="max-width:120px;border-radius:8px;margin-top:8px;">` : ''}
+        `;
+        box.style.display = 'block';
+        nuevoBox.style.display = 'none';
+    } else {
+        box.style.display = 'none';
+        nuevoBox.style.display = 'block';
+    }
+}
+
+async function completarViaje() {
+    const viaje = JSON.parse(localStorage.getItem('viaje_en_curso') || 'null');
+    if (!viaje) return;
+
+    const kmFinal = document.getElementById('viajeKmFinalTarde').value;
+    if (!kmFinal) { alert('Ingresa el Km final'); return; }
+
+    const kmRecorridos = parseFloat(kmFinal) - parseFloat(viaje.kmInicial);
+    if (kmRecorridos < 0) { alert('El Km final debe ser mayor al inicial'); return; }
+
+    const btn = document.querySelector('#viajeEnCursoBox .btn-save');
     btn.textContent = '⏳ Enviando...'; btn.disabled = true;
 
     guardarReporte('MotoViaje', {
-        inspector, fecha, kmInicial, kmFinal, kmRecorridos,
-        fotoTablero: viajeTableroFoto,
-        fotoKmInicial: viajeKmInicialFoto,
-        fotoKmFinal: viajeKmFinalFoto
+        inspector: viaje.inspector, fecha: viaje.fecha,
+        kmInicial: viaje.kmInicial, kmFinal, kmRecorridos,
+        fotoKmInicial: viaje.fotoKmInicial,
+        fotoKmFinal: viajeKmFinalTardeFoto,
+        fotoTablero: viajeTableroTardeFoto
     });
 
-    enviarEnSegundoPlano('🛣️ Registro de Viaje - ' + inspector, {
-        'Inspector': inspector,
-        'Fecha': fecha,
-        'Km_Inicial': kmInicial,
-        'Km_Final': kmFinal,
+    enviarEnSegundoPlano('🛣️ Registro de Viaje - ' + viaje.inspector, {
+        'Inspector': viaje.inspector, 'Fecha': viaje.fecha,
+        'Km_Inicial': viaje.kmInicial, 'Km_Final': kmFinal,
         'Km_Recorridos': kmRecorridos,
         'Modulo': 'Inspección de Moto - Viaje',
-        ...(viajeTableroFoto ? { 'Foto_Tablero': viajeTableroFoto } : {}),
-        ...(viajeKmInicialFoto ? { 'Foto_Km_Inicial': viajeKmInicialFoto } : {}),
-        ...(viajeKmFinalFoto ? { 'Foto_Km_Final': viajeKmFinalFoto } : {}),
+        ...(viaje.fotoKmInicial   ? { 'Foto_Km_Inicial': viaje.fotoKmInicial }   : {}),
+        ...(viajeKmFinalTardeFoto ? { 'Foto_Km_Final':   viajeKmFinalTardeFoto } : {}),
+        ...(viajeTableroTardeFoto ? { 'Foto_Tablero':    viajeTableroTardeFoto } : {}),
     });
 
-    // Generar PDF y descargar
     generarPDFMotoViaje({
-        inspector, fecha, kmInicial, kmFinal, kmRecorridos,
-        foto: viajeTableroFoto,
-        fotoKmInicial: viajeKmInicialFoto,
-        fotoKmFinal: viajeKmFinalFoto
+        inspector: viaje.inspector, fecha: viaje.fecha,
+        kmInicial: viaje.kmInicial, kmFinal, kmRecorridos,
+        foto: viajeTableroTardeFoto,
+        fotoKmInicial: viaje.fotoKmInicial,
+        fotoKmFinal: viajeKmFinalTardeFoto
     });
 
-    document.getElementById('motoViajeForm').reset();
-    viajeTableroFoto = null;
-    viajeKmInicialFoto = null;
-    viajeKmFinalFoto = null;
-    document.getElementById('viajeTableroPreview').innerHTML = '<p>No hay foto</p>';
-    document.getElementById('viajeKmInicialPreview').innerHTML = '<p>No hay foto</p>';
-    document.getElementById('viajeKmFinalPreview').innerHTML = '<p>No hay foto</p>';
-    document.getElementById('viajeFecha').value = new Date().toISOString().split('T')[0];
-    btn.textContent = '📤 Enviar Registro de Viaje'; btn.disabled = false;
-    alert('✅ Registro guardado y PDF descargado. Correo enviándose en segundo plano.');
-});
+    localStorage.removeItem('viaje_en_curso');
+    viajeKmFinalTardeFoto = null;
+    viajeTableroTardeFoto = null;
+    document.getElementById('viajeKmFinalTarde').value = '';
+    document.getElementById('viajeKmFinalTardePreview').innerHTML = '<p>No hay foto</p>';
+    document.getElementById('viajeTableroTardePreview').innerHTML = '<p>No hay foto</p>';
+    btn.textContent = '✅ Guardar Kilometraje Final'; btn.disabled = false;
+
+    verificarViajeEnCurso();
+    alert('✅ Registro completo. PDF descargado y correo enviándose.');
+}
+
+function cancelarViaje() {
+    if (confirm('¿Cancelar el registro? Se perderá el kilometraje inicial guardado.')) {
+        localStorage.removeItem('viaje_en_curso');
+        verificarViajeEnCurso();
+    }
+}
 
 // ---- Submit: Inspección Técnica ----
 document.getElementById('motoInspeccionForm').addEventListener('submit', async (e) => {

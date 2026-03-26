@@ -550,7 +550,41 @@
 
                 <!-- Tab Viaje -->
                 <div id="tabViaje" class="moto-tab-content">
-                    <div class="form-card">
+
+                    <!-- Viaje en curso (si existe) -->
+                    <div id="viajeEnCursoBox" style="display:none;" class="form-card viaje-en-curso">
+                        <h3 style="color:#f59e0b;margin:0 0 12px;">🚦 Kilometraje Inicial Registrado</h3>
+                        <div id="viajeEnCursoInfo"></div>
+                        <div class="form-group" style="margin-top:12px;">
+                            <label>Km Final</label>
+                            <input type="number" id="viajeKmFinalTarde" placeholder="Ej: 12800">
+                        </div>
+                        <div class="form-group">
+                            <label>Foto Km Final</label>
+                            <div class="photo-preview" id="viajeKmFinalTardePreview"><p>No hay foto</p></div>
+                            <div class="photo-buttons">
+                                <button type="button" class="btn-photo" onclick="openCamera('viajeKmFinalTarde')">📷 Tomar Foto</button>
+                                <button type="button" class="btn-photo" onclick="openGallery('viajeKmFinalTarde')">🖼️ Galería</button>
+                            </div>
+                            <input type="file" id="viajeKmFinalTardeGallery" accept="image/*" style="display:none;">
+                        </div>
+                        <div class="form-group">
+                            <label>Foto del Tablero Final</label>
+                            <div class="photo-preview" id="viajeTableroTardePreview"><p>No hay foto</p></div>
+                            <div class="photo-buttons">
+                                <button type="button" class="btn-photo" onclick="openCamera('viajeTableroTarde')">📷 Tomar Foto</button>
+                                <button type="button" class="btn-photo" onclick="openGallery('viajeTableroTarde')">🖼️ Galería</button>
+                            </div>
+                            <input type="file" id="viajeTableroTardeGallery" accept="image/*" style="display:none;">
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:8px;">
+                            <button type="button" class="btn-save" onclick="completarViaje()" style="flex:1;">✅ Guardar Kilometraje Final</button>
+                            <button type="button" class="btn-secondary" onclick="cancelarViaje()" style="background:#ef4444;color:white;">🗑️ Cancelar</button>
+                        </div>
+                    </div>
+
+                    <!-- Formulario nuevo viaje -->
+                    <div id="viajeNuevoBox" class="form-card">
                         <form id="motoViajeForm">
                             <div class="form-group">
                                 <label for="viajeInspector">Inspector</label>
@@ -575,29 +609,7 @@
                                 </div>
                                 <input type="file" id="viajeKmInicialGallery" accept="image/*" style="display:none;">
                             </div>
-                            <div class="form-group">
-                                <label for="viajeKmFinal">Kilometraje Final</label>
-                                <input type="number" id="viajeKmFinal" placeholder="Ej: 12800" required>
-                            </div>
-                            <div class="form-group">
-                                <label>Foto Km Final</label>
-                                <div class="photo-preview" id="viajeKmFinalPreview"><p>No hay foto</p></div>
-                                <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('viajeKmFinal')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('viajeKmFinal')">🖼️ Galería</button>
-                                </div>
-                                <input type="file" id="viajeKmFinalGallery" accept="image/*" style="display:none;">
-                            </div>
-                            <div class="form-group">
-                                <label>Foto del Tablero/Odómetro (obligatoria)</label>
-                                <div class="photo-preview" id="viajeTableroPreview"><p>No hay foto</p></div>
-                                <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('viajeTablero')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('viajeTablero')">🖼️ Galería</button>
-                                </div>
-                                <input type="file" id="viajeTableroGallery" accept="image/*" style="display:none;">
-                            </div>
-                            <button type="submit" class="btn-save">📤 Enviar Registro de Viaje</button>
+                            <button type="submit" class="btn-save">📥 Guardar Kilometraje Inicial</button>
                         </form>
                     </div>
                 </div>
