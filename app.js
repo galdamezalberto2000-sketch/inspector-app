@@ -2527,6 +2527,11 @@ function verificarViajeEnCurso() {
     } else {
         box.style.display = 'none';
         nuevoBox.style.display = 'block';
+        // Re-inicializar select si aún no fue procesado
+        const sel = document.getElementById('viajeInspector');
+        if (sel && !document.getElementById('viajeInspector_sede')) {
+            inicializarSelectsInspector();
+        }
     }
 }
 
@@ -3017,6 +3022,7 @@ const INSPECTOR_SELECT_IDS = [
     'viajeInspector',
     'inspeccionInspector',
     'gastosInspector',
+    'cascoInspector',
 ];
 
 function getSubsedes() {
