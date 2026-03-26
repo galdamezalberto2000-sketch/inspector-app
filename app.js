@@ -2480,18 +2480,13 @@ function mostrarTabMoto(tab) {
 });
 
 // ---- Submit: Registro de Viaje (Km Inicial - Mañana) ----
-document.getElementById('motoViajeForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
+// ---- Registro de Viaje (Km Inicial) ----
+function guardarKmInicial() {
     const inspector = document.getElementById('viajeInspector').value.trim();
     const fecha = document.getElementById('viajeFecha').value;
     const kmInicial = document.getElementById('viajeKmInicial').value;
 
     if (!inspector || !fecha || !kmInicial) { alert('Completa todos los campos'); return; }
-
-    const btn = e.submitter || document.querySelector('#motoViajeForm .btn-save');
-    if (btn) { btn.textContent = '⏳ Guardando...'; btn.disabled = true; }
 
     const viajeEnCurso = {
         inspector, fecha, kmInicial,
@@ -2504,12 +2499,12 @@ document.getElementById('motoViajeForm').addEventListener('submit', async (e) =>
     viajeKmInicialFoto = null;
     document.getElementById('viajeKmInicialPreview').innerHTML = '<p>No hay foto</p>';
     document.getElementById('viajeFecha').value = new Date().toISOString().split('T')[0];
-    if (btn) { btn.textContent = '📥 Guardar Kilometraje Inicial'; btn.disabled = false; }
 
     verificarViajeEnCurso();
     alert('✅ Kilometraje inicial guardado. Completa el registro con el kilometraje final.');
-    return false;
-});
+}
+
+document.getElementById('motoViajeForm').addEventListener('submit', (e) => { e.preventDefault(); return false; });
 
 // Verificar si hay viaje en curso al abrir el tab
 function verificarViajeEnCurso() {
