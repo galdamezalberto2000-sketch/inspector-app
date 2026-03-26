@@ -3183,14 +3183,20 @@ async function cargarReportesSupervisor() {
 
     try {
         const payload = { accion: 'obtenerReportes' };
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
         const res = await fetch(GAS_URL_FIJA, {
             method: 'POST',
             redirect: 'follow',
             headers: { 'Content-Type': 'text/plain' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            signal: controller.signal
         });
+        clearTimeout(timeoutId);
         const text = await res.text();
-        const data = JSON.parse(text);
+        let data;
+        try { data = JSON.parse(text); }
+        catch(e) { throw new Error('Respuesta inválida del servidor'); }
 
         if (!data.success) throw new Error(data.error || 'Error desconocido');
 
