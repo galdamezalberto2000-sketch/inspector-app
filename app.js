@@ -3200,9 +3200,9 @@ async function cargarReportesSupervisor() {
 
         if (!data.success) throw new Error(data.error || 'Error desconocido');
 
-        _todosLosReportes = data.reportes;
-        poblarFiltroInspectores(data.reportes);
-        actualizarStats(data.reportes);
+        _todosLosReportes = data.reportes || [];
+        poblarFiltroInspectores(_todosLosReportes);
+        actualizarStats(_todosLosReportes);
         aplicarFiltros();
 
     } catch(err) {
@@ -3234,6 +3234,7 @@ function aplicarFiltros() {
 }
 
 function poblarFiltroInspectores(reportes) {
+    if (!reportes) return;
     const inspectores = [...new Set(reportes.map(r => r['Inspector']).filter(Boolean))].sort();
     const sel = document.getElementById('filtroInspector');
     const actual = sel.value;
@@ -3247,6 +3248,7 @@ function poblarFiltroInspectores(reportes) {
 }
 
 function actualizarStats(reportes) {
+    if (!reportes) return;
     document.getElementById('statTotal').textContent = reportes.length;
     const hoy = new Date().toLocaleDateString('es-HN');
     const hoyCount = reportes.filter(r => {
@@ -3343,6 +3345,7 @@ var CAMPOS_LABEL = {
 var CAMPOS_FULL = ['Observaciones', 'Google Maps'];
 
 function buildCamposReporte(r) {
+    if (!r || typeof r !== 'object') return '';
     return Object.entries(CAMPOS_LABEL)
         .filter(([k]) => r[k] !== undefined && r[k] !== null && r[k] !== '')
         .map(([k, label]) => {
