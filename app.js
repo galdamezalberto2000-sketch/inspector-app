@@ -2589,32 +2589,27 @@ function cancelarViaje() {
     }
 }
 
-// ---- Submit: Inspección Técnica ----
-document.getElementById('motoInspeccionForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
+// ---- Inspección Técnica ----
+async function enviarInspeccionMoto() {
     const inspector = document.getElementById('inspeccionInspector').value.trim();
     const fecha = document.getElementById('inspeccionFecha').value;
     const observaciones = document.getElementById('inspeccionObservaciones').value.trim();
+
+    if (!inspector || !fecha) { alert('Completa inspector y fecha'); return; }
 
     const btn = document.querySelector('#motoInspeccionForm .btn-save');
     btn.textContent = '⏳ Enviando...'; btn.disabled = true;
 
     const fotos = {
-        moto: inspeccionMotoFoto,
-        retro: inspeccionRetroFoto,
-        llantas: inspeccionLlantasFoto,
-        lucesDB: inspeccionLucesDBFoto,
-        lucesDA: inspeccionLucesDAFoto,
-        lucesTF: inspeccionLucesTFFoto,
+        moto: inspeccionMotoFoto, retro: inspeccionRetroFoto,
+        llantas: inspeccionLlantasFoto, lucesDB: inspeccionLucesDBFoto,
+        lucesDA: inspeccionLucesDAFoto, lucesTF: inspeccionLucesTFFoto,
         lucesTP: inspeccionLucesTPFoto,
     };
 
     guardarReporte('MotoInspeccion', { inspector, fecha, observaciones, fotos });
-
     enviarEnSegundoPlano('🔍 Inspección Moto - ' + inspector, {
-        'Inspector': inspector,
-        'Fecha': fecha,
+        'Inspector': inspector, 'Fecha': fecha,
         'Observaciones': observaciones || 'Ninguna',
         'Modulo': 'Inspección de Moto - Técnica',
         ...(fotos.moto    ? { 'Foto_Moto_Completa': fotos.moto }    : {}),
@@ -2625,8 +2620,6 @@ document.getElementById('motoInspeccionForm').addEventListener('submit', async (
         ...(fotos.lucesTF ? { 'Foto_Luces_TF':      fotos.lucesTF } : {}),
         ...(fotos.lucesTP ? { 'Foto_Luces_TP':      fotos.lucesTP } : {}),
     });
-
-    // Generar PDF
     generarPDFMotoInspeccion({ inspector, fecha, observaciones, fotos });
 
     document.getElementById('motoInspeccionForm').reset();
@@ -2638,17 +2631,19 @@ document.getElementById('motoInspeccionForm').addEventListener('submit', async (
     document.getElementById('inspeccionFecha').value = new Date().toISOString().split('T')[0];
     btn.textContent = '📤 Enviar Inspección'; btn.disabled = false;
     alert('✅ Inspección guardada y PDF descargado. Correo enviándose en segundo plano.');
-});
+}
+document.getElementById('motoInspeccionForm').addEventListener('submit', (e) => e.preventDefault());
 
 // ---- Submit: Gastos ----
-document.getElementById('motoGastosForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-
+// ---- Gastos ----
+async function enviarGastoMoto() {
     const inspector = document.getElementById('gastosInspector').value.trim();
     const fecha = document.getElementById('gastosFecha').value;
     const tipo = document.getElementById('gastosTipo').value;
     const descripcion = document.getElementById('gastosDescripcion').value.trim();
     const valor = document.getElementById('gastosValor').value;
+
+    if (!inspector || !fecha || !tipo || !valor) { alert('Completa todos los campos'); return; }
 
     const btn = document.querySelector('#motoGastosForm .btn-save');
     btn.textContent = '⏳ Enviando...'; btn.disabled = true;
@@ -2658,17 +2653,13 @@ document.getElementById('motoGastosForm').addEventListener('submit', async (e) =
         valor: `L. ${parseFloat(valor).toFixed(2)}`,
         fotoFactura: gastosFacturaFoto
     });
-
     enviarEnSegundoPlano('💰 Gasto Moto - ' + inspector, {
-        'Inspector': inspector,
-        'Fecha': fecha,
-        'Tipo_Gasto': tipo,
-        'Descripcion': descripcion,
+        'Inspector': inspector, 'Fecha': fecha,
+        'Tipo_Gasto': tipo, 'Descripcion': descripcion,
         'Valor': `L. ${parseFloat(valor).toFixed(2)}`,
         'Modulo': 'Inspección de Moto - Gastos',
         ...(gastosFacturaFoto ? { 'Foto_Factura': gastosFacturaFoto } : {}),
     });
-
     generarPDFMotoGastos({ inspector, fecha, tipo, descripcion, valor, foto: gastosFacturaFoto });
 
     document.getElementById('motoGastosForm').reset();
@@ -2677,7 +2668,8 @@ document.getElementById('motoGastosForm').addEventListener('submit', async (e) =
     document.getElementById('gastosFecha').value = new Date().toISOString().split('T')[0];
     btn.textContent = '📤 Enviar Gasto'; btn.disabled = false;
     alert('✅ Gasto guardado y PDF descargado. Correo enviándose en segundo plano.');
-});
+}
+document.getElementById('motoGastosForm').addEventListener('submit', (e) => e.preventDefault());
 
 // ---- PDF: Viaje ----
 function generarPDFMotoViaje(r) {
@@ -2881,12 +2873,14 @@ function generarPDFMotoGastos(r) {
 
 // ==================== CASCO ====================
 
-document.getElementById('motoCascoForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
+// ==================== CASCO ====================
+
+async function enviarCascoMoto() {
     const inspector = document.getElementById('cascoInspector').value;
     const fecha = document.getElementById('cascoFecha').value;
     const observaciones = document.getElementById('cascoObservaciones').value.trim();
 
+    if (!inspector || !fecha) { alert('Completa inspector y fecha'); return; }
     if (!cascoCascoFoto && !cascoViseraFoto && !cascoSeguroFoto) {
         alert('Por favor agrega al menos una foto'); return;
     }
@@ -2896,17 +2890,14 @@ document.getElementById('motoCascoForm').addEventListener('submit', async (e) =>
 
     guardarReporte('MotoCasco', { inspector, fecha, observaciones,
         fotoCasco: cascoCascoFoto, fotoVisera: cascoViseraFoto, fotoSeguro: cascoSeguroFoto });
-
     enviarEnSegundoPlano('⛑️ Inspección Casco - ' + inspector, {
-        'Inspector': inspector,
-        'Fecha': fecha,
+        'Inspector': inspector, 'Fecha': fecha,
         'Observaciones': observaciones || 'Ninguna',
         'Modulo': 'Inspección de Moto - Casco',
-        ...(cascoCascoFoto  ? { 'Foto_Casco':   cascoCascoFoto }  : {}),
-        ...(cascoViseraFoto ? { 'Foto_Visera':  cascoViseraFoto } : {}),
-        ...(cascoSeguroFoto ? { 'Foto_Seguro':  cascoSeguroFoto } : {}),
+        ...(cascoCascoFoto  ? { 'Foto_Casco':  cascoCascoFoto }  : {}),
+        ...(cascoViseraFoto ? { 'Foto_Visera': cascoViseraFoto } : {}),
+        ...(cascoSeguroFoto ? { 'Foto_Seguro': cascoSeguroFoto } : {}),
     });
-
     generarPDFMotoCasco({ inspector, fecha, observaciones,
         fotoCasco: cascoCascoFoto, fotoVisera: cascoViseraFoto, fotoSeguro: cascoSeguroFoto });
 
@@ -2918,7 +2909,8 @@ document.getElementById('motoCascoForm').addEventListener('submit', async (e) =>
     document.getElementById('cascoFecha').value = new Date().toISOString().split('T')[0];
     btn.textContent = '📤 Enviar Inspección de Casco'; btn.disabled = false;
     alert('✅ Inspección de casco guardada y PDF descargado. Correo enviándose en segundo plano.');
-});
+}
+document.getElementById('motoCascoForm').addEventListener('submit', (e) => e.preventDefault());
 
 function generarPDFMotoCasco(r) {
     const { jsPDF } = window.jspdf;
