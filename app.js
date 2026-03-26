@@ -3,6 +3,20 @@
 // Obtener elementos del DOM
 const CORREO_DESTINO = 'galdamezalberto2000@gmail.com';
 
+// Columnas supervisor — declaradas al inicio para evitar problemas de inicialización
+var CAMPOS_LABEL = {
+    'Inspector':'Inspector', 'Usuario':'Usuario', 'Fecha':'Fecha',
+    'Clave':'Clave', 'N° Medidor':'N° Medidor', 'Observaciones':'Observaciones',
+    'Latitud':'Latitud', 'Longitud':'Longitud', 'Google Maps':'Google Maps',
+    'Km Inicial':'Km inicial', 'Km Final':'Km final', 'Km Recorridos':'Km recorridos',
+    'Tipo Gasto':'Tipo de gasto', 'Descripción':'Descripción', 'Valor':'Valor',
+    'Identidad':'Identidad', 'Lectura Correcta':'Lectura correcta',
+    'Lectura Incorrecta':'Lectura incorrecta', 'Contiguo':'Contiguo',
+    'Cantidad Fotos':'Cantidad de fotos',
+};
+var CAMPOS_FULL = ['Observaciones', 'Google Maps'];
+var _todosLosReportes = [];
+
 // URL del Google Apps Script — fija en el código
 const GAS_URL_FIJA = 'https://script.google.com/macros/s/AKfycbxrNXkFEwmGaLtMYsb_dhrDNH3yZ1ZvDORwcFCz6FlAS7c2ETFRH0ay2YeddDxW7pqj1Q/exec';
 
@@ -3171,8 +3185,7 @@ function limpiarFiltros() {
     aplicarFiltros();
 }
 
-// Cache de todos los reportes cargados
-var _todosLosReportes = [];
+// Cache de todos los reportes cargados — declarado al inicio del archivo
 
 // Carga reportes desde Google Sheets via GAS
 async function cargarReportesSupervisor() {
@@ -3336,20 +3349,7 @@ function toggleReporte(id) {
     if (arrow) arrow.classList.toggle('open', open);
 }
 
-// Columnas a mostrar y sus etiquetas
-var CAMPOS_LABEL = {
-    'Inspector':'Inspector', 'Usuario':'Usuario', 'Fecha':'Fecha',
-    'Clave':'Clave', 'N° Medidor':'N° Medidor', 'Observaciones':'Observaciones',
-    'Latitud':'Latitud', 'Longitud':'Longitud', 'Google Maps':'Google Maps',
-    'Km Inicial':'Km inicial', 'Km Final':'Km final', 'Km Recorridos':'Km recorridos',
-    'Tipo Gasto':'Tipo de gasto', 'Descripción':'Descripción', 'Valor':'Valor',
-    'Identidad':'Identidad', 'Lectura Correcta':'Lectura correcta',
-    'Lectura Incorrecta':'Lectura incorrecta', 'Contiguo':'Contiguo',
-    'Cantidad Fotos':'Cantidad de fotos',
-};
-
-// Campos que ocupan ancho completo
-var CAMPOS_FULL = ['Observaciones', 'Google Maps'];
+// Columnas supervisor — declaradas al inicio del archivo
 
 function buildCamposReporte(r) {
     if (!r || typeof r !== 'object') return '';
