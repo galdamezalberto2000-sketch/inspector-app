@@ -3335,6 +3335,7 @@ function renderDashboard(reportes) {
                 ${fotos}
                 ${pdf}
                 ${fechaReg ? `<div style="margin-top:10px;font-size:11px;color:var(--gray-400);">🕐 Registrado: ${fechaReg}</div>` : ''}
+                <button onclick="eliminarReporte(${idx})" style="margin-top:12px;padding:8px 16px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:13px;cursor:pointer;">🗑️ Eliminar reporte</button>
             </div>
         </div>`;
         } catch(e) { return `<div class="reporte-card"><p style="padding:12px;color:red;">Error en reporte ${idx}: ${e.message}</p></div>`; }
@@ -3347,6 +3348,18 @@ function toggleReporte(id) {
     if (!body) return;
     const open = body.classList.toggle('open');
     if (arrow) arrow.classList.toggle('open', open);
+}
+
+function eliminarReporte(idx) {
+    if (!confirm('¿Eliminar este reporte de la vista?')) return;
+    _todosLosReportes.splice(idx, 1);
+    aplicarFiltros();
+}
+
+function eliminarTodosReportes() {
+    if (!confirm('¿Eliminar todos los reportes de la vista?')) return;
+    _todosLosReportes = [];
+    aplicarFiltros();
 }
 
 // Columnas supervisor — declaradas al inicio del archivo
