@@ -1249,3 +1249,26 @@ body {
     background: #fffbeb !important;
 }
 .viaje-en-curso h3 { margin: 0 0 12px; }
+
+/* Lucide Icons */
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+.icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}

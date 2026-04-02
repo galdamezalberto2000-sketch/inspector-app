@@ -3340,6 +3340,8 @@ function renderDashboard(reportes) {
         </div>`;
         } catch(e) { return `<div class="reporte-card"><p style="padding:12px;color:red;">Error en reporte ${idx}: ${e.message}</p></div>`; }
     }).join('');
+    // Re-inicializar iconos Lucide en contenido dinámico
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
 function toggleReporte(id) {

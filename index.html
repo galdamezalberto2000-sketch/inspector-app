@@ -11,6 +11,7 @@
     <meta name="apple-mobile-web-app-title" content="Inspector">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -69,8 +70,12 @@
                     <h1>Bienvenido, <span id="currentUser"></span></h1>
                 </div>
                 <div style="display:flex;gap:8px;">
-                    <button onclick="abrirGestionInspectores()" class="btn-secondary" title="Inspectores">👷</button>
-                    <button id="logoutBtn" class="btn-secondary">Salir</button>
+                    <button onclick="abrirGestionInspectores()" class="btn-secondary btn-icon" title="Inspectores" aria-label="Gestionar inspectores">
+                        <span class="icon"><i data-lucide="hard-hat"></i></span>
+                    </button>
+                    <button id="logoutBtn" class="btn-secondary btn-icon" aria-label="Cerrar sesión">
+                        <span class="icon"><i data-lucide="log-out"></i></span> Salir
+                    </button>
                 </div>
             </div>
             <div class="content">
@@ -160,7 +165,7 @@
         <div id="inspectorScreen" class="screen">
             <div class="header">
                 <div class="header-left"><h1>Informe de Inspector</h1></div>
-                <button id="backToMenuBtn" class="btn-secondary">← Volver</button>
+                <button id="backToMenuBtn" class="btn-secondary btn-icon" aria-label="Volver"><span class="icon"><i data-lucide="arrow-left"></i></span> Volver</button>
             </div>
             <div class="content">
                 <div class="form-card">
@@ -201,7 +206,7 @@
         <div id="postesScreen" class="screen">
             <div class="header">
                 <div class="header-left"><h1>Postes derribados</h1></div>
-                <button onclick="volverMenu('postesScreen')" class="btn-secondary">← Volver</button>
+                <button onclick="volverMenu('postesScreen')" class="btn-secondary btn-icon" aria-label="Volver"><span class="icon"><i data-lucide="arrow-left"></i></span> Volver</button>
             </div>
             <div class="content">
                 <div class="form-card">
@@ -253,7 +258,7 @@
         <div id="reubicacionScreen" class="screen">
             <div class="header">
                 <div class="header-left"><h1>Reubicación</h1></div>
-                <button onclick="volverMenu('reubicacionScreen')" class="btn-secondary">← Volver</button>
+                <button onclick="volverMenu('reubicacionScreen')" class="btn-secondary btn-icon" aria-label="Volver"><span class="icon"><i data-lucide="arrow-left"></i></span> Volver</button>
             </div>
             <div class="content">
                 <div class="form-card">
@@ -313,7 +318,7 @@
         <div id="consumoScreen" class="screen">
             <div class="header">
                 <div class="header-left"><h1>Reporte de bajo consumo</h1></div>
-                <button onclick="volverMenu('consumoScreen')" class="btn-secondary">← Volver</button>
+                <button onclick="volverMenu('consumoScreen')" class="btn-secondary btn-icon" aria-label="Volver"><span class="icon"><i data-lucide="arrow-left"></i></span> Volver</button>
             </div>
             <div class="content">
                 <div class="form-card">
@@ -373,7 +378,7 @@
         <div id="erroresScreen" class="screen">
             <div class="header">
                 <div class="header-left"><h1>Reporte de errores en campo</h1></div>
-                <button onclick="volverMenu('erroresScreen')" class="btn-secondary">← Volver</button>
+                <button onclick="volverMenu('erroresScreen')" class="btn-secondary btn-icon" aria-label="Volver"><span class="icon"><i data-lucide="arrow-left"></i></span> Volver</button>
             </div>
             <div class="content">
                 <div class="form-card">
@@ -436,7 +441,7 @@
         <div id="medidoresScreen" class="screen">
             <div class="header">
                 <div class="header-left"><h1>Medidores fuera de línea</h1></div>
-                <button onclick="volverMenu('medidoresScreen')" class="btn-secondary">← Volver</button>
+                <button onclick="volverMenu('medidoresScreen')" class="btn-secondary btn-icon" aria-label="Volver"><span class="icon"><i data-lucide="arrow-left"></i></span> Volver</button>
             </div>
             <div class="content">
                 <div class="form-card">
@@ -481,7 +486,7 @@
         <div id="facturasScreen" class="screen">
             <div class="header">
                 <div class="header-left"><h1>Facturas</h1></div>
-                <button onclick="volverMenu('facturasScreen')" class="btn-secondary">← Volver</button>
+                <button onclick="volverMenu('facturasScreen')" class="btn-secondary btn-icon" aria-label="Volver"><span class="icon"><i data-lucide="arrow-left"></i></span> Volver</button>
             </div>
             <div class="content">
                 <div class="form-card">
@@ -536,7 +541,7 @@
         <div id="motoScreen" class="screen">
             <div class="header">
                 <div class="header-left"><h1>Inspección de Moto</h1></div>
-                <button onclick="volverMenu('motoScreen')" class="btn-secondary">← Volver</button>
+                <button onclick="volverMenu('motoScreen')" class="btn-secondary btn-icon" aria-label="Volver"><span class="icon"><i data-lucide="arrow-left"></i></span> Volver</button>
             </div>
             <div class="content">
                 <!-- Tabs -->
@@ -873,9 +878,15 @@
                     <h1>Panel Supervisor</h1>
                 </div>
                 <div style="display:flex;gap:8px;">
-                    <button onclick="cargarReportesSupervisor()" class="btn-secondary" title="Actualizar">🔄</button>
-                    <button onclick="eliminarTodosReportes()" class="btn-secondary" style="background:#ef4444;color:white;" title="Eliminar todos">🗑️ Todo</button>
-                    <button onclick="cerrarSesionSupervisor()" class="btn-secondary">Salir</button>
+                    <button onclick="cargarReportesSupervisor()" class="btn-secondary btn-icon" title="Actualizar" aria-label="Actualizar reportes">
+                        <span class="icon"><i data-lucide="refresh-cw"></i></span>
+                    </button>
+                    <button onclick="eliminarTodosReportes()" class="btn-secondary btn-icon" style="background:#ef4444;color:white;" title="Eliminar todos" aria-label="Eliminar todos los reportes">
+                        <span class="icon"><i data-lucide="trash-2"></i></span> Todo
+                    </button>
+                    <button onclick="cerrarSesionSupervisor()" class="btn-secondary btn-icon" aria-label="Cerrar sesión">
+                        <span class="icon"><i data-lucide="log-out"></i></span> Salir
+                    </button>
                 </div>
             </div>
             <div class="content">
@@ -998,6 +1009,8 @@
           .then(() => console.log('✅ Service Worker registrado'))
           .catch(e => console.log('SW error:', e));
       }
+      // Inicializar iconos Lucide
+      document.addEventListener('DOMContentLoaded', () => lucide.createIcons());
     </script>
 </body>
 </html>
