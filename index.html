@@ -19,7 +19,7 @@
         <!-- Login -->
         <div id="loginScreen" class="screen active">
             <div class="login-box">
-                <div class="login-logo"><div class="logo-icon">⚡</div></div>
+                <div class="login-logo"><div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
                 <h1>Iniciar Sesión</h1>
                 <p class="subtitle">Ingresa tus credenciales para continuar</p>
                 <form id="loginForm">
@@ -31,7 +31,7 @@
                         <label for="loginPassword">Contraseña</label>
                         <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
                     </div>
-                    <button type="submit" class="btn-save">Ingresar</button>
+                    <button type="submit" class="btn-save btn-icon">Ingresar</button>
                 </form>
                 <p class="link-text">¿No tienes cuenta? <a href="#" id="showRegister">Regístrate aquí</a></p>
             </div>
@@ -40,7 +40,7 @@
         <!-- Registro -->
         <div id="registerScreen" class="screen">
             <div class="login-box">
-                <div class="login-logo"><div class="logo-icon">⚡</div></div>
+                <div class="login-logo"><div class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div></div>
                 <h1>Crear Cuenta</h1>
                 <p class="subtitle">Completa los datos para registrarte</p>
                 <form id="registerForm">
@@ -56,7 +56,7 @@
                         <label for="registerConfirmPassword">Confirmar Contraseña</label>
                         <input type="password" id="registerConfirmPassword" placeholder="Repite tu contraseña" required>
                     </div>
-                    <button type="submit" class="btn-save">Registrarse</button>
+                    <button type="submit" class="btn-save btn-icon">Registrarse</button>
                 </form>
                 <p class="link-text">¿Ya tienes cuenta? <a href="#" id="showLogin">Inicia sesión aquí</a></p>
             </div>
@@ -182,8 +182,8 @@
                             <label>Foto de Factura</label>
                             <div class="photo-preview" id="facturaPreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
-                                <button type="button" class="btn-photo" onclick="openCamera('factura')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('factura')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('factura')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('factura')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="facturaGallery" accept="image/*" style="display:none;">
                         </div>
@@ -191,12 +191,12 @@
                             <label>Foto de Moto en Taller</label>
                             <div class="photo-preview" id="motoPreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
-                                <button type="button" class="btn-photo" onclick="openCamera('moto')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('moto')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('moto')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('moto')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="motoGallery" accept="image/*" style="display:none;">
                         </div>
-                        <button type="submit" class="btn-save">📤 Enviar Informe</button>
+                        <button type="submit" class="btn-save btn-icon"><span class="icon"><i data-lucide="send"></i></span> Enviar Informe</button>
                     </form>
                 </div>
             </div>
@@ -227,8 +227,8 @@
                             <label>Fotos del Poste</label>
                             <div id="postesGaleria" class="fotos-grid"></div>
                             <div class="photo-buttons" style="margin-top:10px;">
-                                <button type="button" class="btn-photo" onclick="openCamera('postes')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('postes')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('postes')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('postes')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="postesGallery" accept="image/*" multiple style="display:none;">
                             <p id="postesContadorFotos" style="color:#888; font-size:13px; margin-top:8px;">0 fotos agregadas</p>
@@ -236,10 +236,10 @@
                         <div class="form-group">
                             <label>Coordenadas GPS</label>
                             <div class="coords-box" id="postesCoordsBox"><p>Sin coordenadas</p></div>
-                            <button type="button" class="btn-coords" onclick="obtenerCoordenadasPostes()">📍 Obtener Ubicación</button>
+                            <button type="button" class="btn-coords btn-icon" onclick="obtenerCoordenadasPostes()"><span class="icon"><i data-lucide="map-pin"></i></span> Obtener Ubicación</button>
                             <div class="coords-manual">
                                 <input type="text" id="postesCoordManual" placeholder="Pega aquí: 14.0839, -89.2182">
-                                <button type="button" class="btn-coords-manual" onclick="aplicarCoordsManuales('postes')">✅ Aplicar</button>
+                                <button type="button" class="btn-coords-manual btn-icon" onclick="aplicarCoordsManuales('postes')"><span class="icon"><i data-lucide="check"></i></span> Aplicar</button>
                             </div>
                             <input type="hidden" id="postesLat">
                             <input type="hidden" id="postesLng">
@@ -248,7 +248,7 @@
                             <label for="postesObservaciones">Observaciones</label>
                             <textarea id="postesObservaciones" rows="4" placeholder="Ingrese observaciones..."></textarea>
                         </div>
-                        <button type="submit" class="btn-save">📤 Enviar Reporte</button>
+                        <button type="submit" class="btn-save btn-icon"><span class="icon"><i data-lucide="send"></i></span> Enviar Reporte</button>
                     </form>
                 </div>
             </div>
@@ -279,8 +279,8 @@
                             <label>Foto de Fachada</label>
                             <div class="photo-preview" id="reubicacionFachadaPreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
-                                <button type="button" class="btn-photo" onclick="openCamera('reubicacionFachada')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('reubicacionFachada')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('reubicacionFachada')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('reubicacionFachada')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="reubicacionFachadaGallery" accept="image/*" style="display:none;">
                         </div>
@@ -288,18 +288,18 @@
                             <label>Foto de Medidor</label>
                             <div class="photo-preview" id="reubicacionMedidorPreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
-                                <button type="button" class="btn-photo" onclick="openCamera('reubicacionMedidor')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('reubicacionMedidor')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('reubicacionMedidor')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('reubicacionMedidor')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="reubicacionMedidorGallery" accept="image/*" style="display:none;">
                         </div>
                         <div class="form-group">
                             <label>Coordenadas GPS</label>
                             <div class="coords-box" id="reubicacionCoordsBox"><p>Sin coordenadas</p></div>
-                            <button type="button" class="btn-coords" onclick="obtenerCoordenadasReubicacion()">📍 Obtener Ubicación</button>
+                            <button type="button" class="btn-coords btn-icon" onclick="obtenerCoordenadasReubicacion()"><span class="icon"><i data-lucide="map-pin"></i></span> Obtener Ubicación</button>
                             <div class="coords-manual">
                                 <input type="text" id="reubicacionCoordManual" placeholder="Pega aquí: 14.0839, -89.2182">
-                                <button type="button" class="btn-coords-manual" onclick="aplicarCoordsManuales('reubicacion')">✅ Aplicar</button>
+                                <button type="button" class="btn-coords-manual btn-icon" onclick="aplicarCoordsManuales('reubicacion')"><span class="icon"><i data-lucide="check"></i></span> Aplicar</button>
                             </div>
                             <input type="hidden" id="reubicacionLat">
                             <input type="hidden" id="reubicacionLng">
@@ -308,7 +308,7 @@
                             <label for="reubicacionObservaciones">Observaciones</label>
                             <textarea id="reubicacionObservaciones" rows="4" placeholder="Ingrese observaciones..."></textarea>
                         </div>
-                        <button type="submit" class="btn-save">📤 Enviar Reporte</button>
+                        <button type="submit" class="btn-save btn-icon"><span class="icon"><i data-lucide="send"></i></span> Enviar Reporte</button>
                     </form>
                 </div>
             </div>
@@ -339,8 +339,8 @@
                             <label>Foto de Fachada</label>
                             <div class="photo-preview" id="consumoFachadaPreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
-                                <button type="button" class="btn-photo" onclick="openCamera('consumoFachada')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('consumoFachada')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('consumoFachada')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('consumoFachada')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="consumoFachadaGallery" accept="image/*" style="display:none;">
                         </div>
@@ -348,18 +348,18 @@
                             <label>Foto de Medidor</label>
                             <div class="photo-preview" id="consumoMedidorPreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
-                                <button type="button" class="btn-photo" onclick="openCamera('consumoMedidor')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('consumoMedidor')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('consumoMedidor')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('consumoMedidor')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="consumoMedidorGallery" accept="image/*" style="display:none;">
                         </div>
                         <div class="form-group">
                             <label>Coordenadas GPS</label>
                             <div class="coords-box" id="consumoCoordsBox"><p>Sin coordenadas</p></div>
-                            <button type="button" class="btn-coords" onclick="obtenerCoordenadasConsumo()">📍 Obtener Ubicación</button>
+                            <button type="button" class="btn-coords btn-icon" onclick="obtenerCoordenadasConsumo()"><span class="icon"><i data-lucide="map-pin"></i></span> Obtener Ubicación</button>
                             <div class="coords-manual">
                                 <input type="text" id="consumoCoordManual" placeholder="Pega aquí: 14.0839, -89.2182">
-                                <button type="button" class="btn-coords-manual" onclick="aplicarCoordsManuales('consumo')">✅ Aplicar</button>
+                                <button type="button" class="btn-coords-manual btn-icon" onclick="aplicarCoordsManuales('consumo')"><span class="icon"><i data-lucide="check"></i></span> Aplicar</button>
                             </div>
                             <input type="hidden" id="consumoLat">
                             <input type="hidden" id="consumoLng">
@@ -368,7 +368,7 @@
                             <label for="consumoObservaciones">Observaciones</label>
                             <textarea id="consumoObservaciones" rows="4" placeholder="Ingrese observaciones..."></textarea>
                         </div>
-                        <button type="submit" class="btn-save">📤 Enviar Reporte</button>
+                        <button type="submit" class="btn-save btn-icon"><span class="icon"><i data-lucide="send"></i></span> Enviar Reporte</button>
                     </form>
                 </div>
             </div>
@@ -413,8 +413,8 @@
                             <label>Foto del Medidor</label>
                             <div class="photo-preview" id="errorFotoPreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
-                                <button type="button" class="btn-photo" onclick="openCamera('errorMedidor')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('errorMedidor')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('errorMedidor')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('errorMedidor')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="errorMedidorGallery" accept="image/*" style="display:none;">
                         </div>
@@ -423,15 +423,15 @@
                             <div class="coords-box" id="errorCoordsBox">
                                 <p id="errorCoordsText">Sin coordenadas</p>
                             </div>
-                            <button type="button" class="btn-coords" onclick="obtenerCoordenadasError()">📍 Obtener Ubicación</button>
+                            <button type="button" class="btn-coords btn-icon" onclick="obtenerCoordenadasError()"><span class="icon"><i data-lucide="map-pin"></i></span> Obtener Ubicación</button>
                             <div class="coords-manual">
                                 <input type="text" id="errorCoordManual" placeholder="Pega aquí: 14.0839, -89.2182">
-                                <button type="button" class="btn-coords-manual" onclick="aplicarCoordsManuales('error')">✅ Aplicar</button>
+                                <button type="button" class="btn-coords-manual btn-icon" onclick="aplicarCoordsManuales('error')"><span class="icon"><i data-lucide="check"></i></span> Aplicar</button>
                             </div>
                             <input type="hidden" id="errorLat">
                             <input type="hidden" id="errorLng">
                         </div>
-                        <button type="submit" class="btn-save">📤 Enviar Reporte</button>
+                        <button type="submit" class="btn-save btn-icon"><span class="icon"><i data-lucide="send"></i></span> Enviar Reporte</button>
                     </form>
                 </div>
             </div>
@@ -454,8 +454,8 @@
                             <label>Foto del Medidor</label>
                             <div class="photo-preview" id="medidorFotoPreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
-                                <button type="button" class="btn-photo" onclick="openCamera('medidor')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('medidor')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('medidor')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('medidor')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="medidorGallery" accept="image/*" style="display:none;">
                         </div>
@@ -464,10 +464,10 @@
                             <div class="coords-box" id="coordsBox">
                                 <p id="coordsText">Sin coordenadas</p>
                             </div>
-                            <button type="button" class="btn-coords" onclick="obtenerCoordenadas()">📍 Obtener Ubicación</button>
+                            <button type="button" class="btn-coords btn-icon" onclick="obtenerCoordenadas()"><span class="icon"><i data-lucide="map-pin"></i></span> Obtener Ubicación</button>
                             <div class="coords-manual">
                                 <input type="text" id="medidorCoordManual" placeholder="Pega aquí: 14.0839, -89.2182">
-                                <button type="button" class="btn-coords-manual" onclick="aplicarCoordsManuales('medidor')">✅ Aplicar</button>
+                                <button type="button" class="btn-coords-manual btn-icon" onclick="aplicarCoordsManuales('medidor')"><span class="icon"><i data-lucide="check"></i></span> Aplicar</button>
                             </div>
                             <input type="hidden" id="medidorLat">
                             <input type="hidden" id="medidorLng">
@@ -476,7 +476,7 @@
                             <label for="medidorObservaciones">Observaciones</label>
                             <textarea id="medidorObservaciones" rows="4" placeholder="Ingrese observaciones del medidor..."></textarea>
                         </div>
-                        <button type="submit" class="btn-save">📤 Enviar Reporte</button>
+                        <button type="submit" class="btn-save btn-icon"><span class="icon"><i data-lucide="send"></i></span> Enviar Reporte</button>
                     </form>
                 </div>
             </div>
@@ -505,10 +505,10 @@
                             <label for="facturasTipo">Tipo de Gasto</label>
                             <select id="facturasTipo" required onchange="mostrarCamposFactura()">
                                 <option value="">-- Selecciona --</option>
-                                <option value="Desayuno">🍳 Desayuno</option>
-                                <option value="Almuerzo">🍽️ Almuerzo</option>
-                                <option value="Cena">🌙 Cena</option>
-                                <option value="Hospedaje">🏨 Hospedaje</option>
+                                <option value="Desayuno">Desayuno</option>
+                                <option value="Almuerzo">Almuerzo</option>
+                                <option value="Cena">Cena</option>
+                                <option value="Hospedaje">Hospedaje</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -523,14 +523,14 @@
                             <label>Fotos de Factura</label>
                             <div id="facturasGaleria" class="fotos-grid"></div>
                             <div class="photo-buttons" style="margin-top:10px;">
-                                <button type="button" class="btn-photo" onclick="openCamera('facturas')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('facturas')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('facturas')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('facturas')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="facturasGallery" accept="image/*" multiple style="display:none;">
                             <p id="facturasContadorFotos" style="color:#888;font-size:13px;margin-top:8px;">0 fotos agregadas</p>
                         </div>
                         <div style="display:flex;gap:12px;margin-top:8px;">
-                            <button type="submit" class="btn-save" style="flex:1;">📤 Enviar y Descargar PDF</button>
+                            <button type="submit" class="btn-save btn-icon" style="flex:1;"><span class="icon"><i data-lucide="send"></i></span> Enviar y Descargar PDF</button>
                         </div>
                     </form>
                 </div>
@@ -546,10 +546,10 @@
             <div class="content">
                 <!-- Tabs -->
                 <div style="display:flex;gap:8px;margin-bottom:20px;overflow-x:auto;padding-bottom:4px;">
-                    <button class="moto-tab active" onclick="mostrarTabMoto('viaje')">🛣️ Viaje</button>
-                    <button class="moto-tab" onclick="mostrarTabMoto('inspeccion')">🔍 Inspección</button>
-                    <button class="moto-tab" onclick="mostrarTabMoto('gastos')">💰 Gastos</button>
-                    <button class="moto-tab" onclick="mostrarTabMoto('casco')">⛑️ Casco</button>
+                    <button class="moto-tab btn-icon active" onclick="mostrarTabMoto('viaje')"><span class="icon"><i data-lucide="route"></i></span> Viaje</button>
+                    <button class="moto-tab btn-icon" onclick="mostrarTabMoto('inspeccion')"><span class="icon"><i data-lucide="search"></i></span> Inspección</button>
+                    <button class="moto-tab btn-icon" onclick="mostrarTabMoto('gastos')"><span class="icon"><i data-lucide="receipt"></i></span> Gastos</button>
+                    <button class="moto-tab btn-icon" onclick="mostrarTabMoto('casco')"><span class="icon"><i data-lucide="shield"></i></span> Casco</button>
                 </div>
 
                 <!-- Tab Viaje -->
@@ -557,7 +557,7 @@
 
                     <!-- Viaje en curso (si existe) -->
                     <div id="viajeEnCursoBox" style="display:none;" class="form-card viaje-en-curso">
-                        <h3 style="color:#f59e0b;margin:0 0 12px;">🚦 Kilometraje Inicial Registrado</h3>
+                        <h3 style="color:#f59e0b;margin:0 0 12px;">Kilometraje Inicial Registrado</h3>
                         <div id="viajeEnCursoInfo"></div>
                         <div class="form-group" style="margin-top:12px;">
                             <label>Km Final</label>
@@ -567,8 +567,8 @@
                             <label>Foto Km Final</label>
                             <div class="photo-preview" id="viajeKmFinalTardePreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
-                                <button type="button" class="btn-photo" onclick="openCamera('viajeKmFinalTarde')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('viajeKmFinalTarde')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('viajeKmFinalTarde')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('viajeKmFinalTarde')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="viajeKmFinalTardeGallery" accept="image/*" style="display:none;">
                         </div>
@@ -576,14 +576,14 @@
                             <label>Foto del Tablero Final</label>
                             <div class="photo-preview" id="viajeTableroTardePreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
-                                <button type="button" class="btn-photo" onclick="openCamera('viajeTableroTarde')">📷 Tomar Foto</button>
-                                <button type="button" class="btn-photo" onclick="openGallery('viajeTableroTarde')">🖼️ Galería</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openCamera('viajeTableroTarde')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                <button type="button" class="btn-photo btn-icon" onclick="openGallery('viajeTableroTarde')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                             </div>
                             <input type="file" id="viajeTableroTardeGallery" accept="image/*" style="display:none;">
                         </div>
                         <div style="display:flex;gap:8px;margin-top:8px;">
-                            <button type="button" class="btn-save" onclick="completarViaje()" style="flex:1;">✅ Guardar Kilometraje Final</button>
-                            <button type="button" class="btn-secondary" onclick="cancelarViaje()" style="background:#ef4444;color:white;">🗑️ Cancelar</button>
+                            <button type="button" class="btn-save btn-icon" onclick="completarViaje()" style="flex:1;"><span class="icon"><i data-lucide="save"></i></span> Guardar Km Final</button>
+                            <button type="button" class="btn-secondary btn-icon" onclick="cancelarViaje()" style="background:#ef4444;color:white;"><span class="icon"><i data-lucide="x"></i></span> Cancelar</button>
                         </div>
                     </div>
 
@@ -625,12 +625,12 @@
                                 <label>Foto Km Inicial</label>
                                 <div class="photo-preview" id="viajeKmInicialPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('viajeKmInicial')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('viajeKmInicial')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('viajeKmInicial')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('viajeKmInicial')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="viajeKmInicialGallery" accept="image/*" style="display:none;">
                             </div>
-                            <button type="button" class="btn-save" onclick="guardarKmInicial()">📥 Guardar Kilometraje Inicial</button>
+                            <button type="button" class="btn-save btn-icon" onclick="guardarKmInicial()"><span class="icon"><i data-lucide="save"></i></span> Guardar Km Inicial</button>
                         </form>
                     </div>
                 </div>
@@ -670,8 +670,8 @@
                                 <label>Foto Moto Completa</label>
                                 <div class="photo-preview" id="inspeccionMotoPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('inspeccionMoto')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('inspeccionMoto')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionMoto')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('inspeccionMoto')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="inspeccionMotoGallery" accept="image/*" style="display:none;">
                             </div>
@@ -679,8 +679,8 @@
                                 <label>Foto Retrovisores</label>
                                 <div class="photo-preview" id="inspeccionRetroPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('inspeccionRetro')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('inspeccionRetro')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionRetro')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('inspeccionRetro')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="inspeccionRetroGallery" accept="image/*" style="display:none;">
                             </div>
@@ -688,8 +688,8 @@
                                 <label>Foto Llantas</label>
                                 <div class="photo-preview" id="inspeccionLlantasPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('inspeccionLlantas')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('inspeccionLlantas')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionLlantas')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('inspeccionLlantas')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="inspeccionLlantasGallery" accept="image/*" style="display:none;">
                             </div>
@@ -697,8 +697,8 @@
                                 <label>Luces Delanteras (bajas)</label>
                                 <div class="photo-preview" id="inspeccionLucesDBPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('inspeccionLucesDB')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('inspeccionLucesDB')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionLucesDB')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('inspeccionLucesDB')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="inspeccionLucesDBGallery" accept="image/*" style="display:none;">
                             </div>
@@ -706,8 +706,8 @@
                                 <label>Luces Delanteras (altas)</label>
                                 <div class="photo-preview" id="inspeccionLucesDAPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('inspeccionLucesDA')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('inspeccionLucesDA')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionLucesDA')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('inspeccionLucesDA')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="inspeccionLucesDAGallery" accept="image/*" style="display:none;">
                             </div>
@@ -715,8 +715,8 @@
                                 <label>Luces Traseras (freno)</label>
                                 <div class="photo-preview" id="inspeccionLucesTFPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('inspeccionLucesTF')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('inspeccionLucesTF')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionLucesTF')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('inspeccionLucesTF')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="inspeccionLucesTFGallery" accept="image/*" style="display:none;">
                             </div>
@@ -724,8 +724,8 @@
                                 <label>Luces Traseras (posición)</label>
                                 <div class="photo-preview" id="inspeccionLucesTPPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('inspeccionLucesTP')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('inspeccionLucesTP')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionLucesTP')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('inspeccionLucesTP')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="inspeccionLucesTPGallery" accept="image/*" style="display:none;">
                             </div>
@@ -733,7 +733,7 @@
                                 <label for="inspeccionObservaciones">Observaciones</label>
                                 <textarea id="inspeccionObservaciones" rows="3" placeholder="Estado general, anomalías..."></textarea>
                             </div>
-                            <button type="button" class="btn-save" onclick="enviarInspeccionMoto()">📤 Enviar Inspección</button>
+                            <button type="button" class="btn-save btn-icon" onclick="enviarInspeccionMoto()"><span class="icon"><i data-lucide="send"></i></span> Enviar Inspección</button>
                         </form>
                     </div>
                 </div>
@@ -773,9 +773,9 @@
                                 <label for="gastosTipo">Tipo de Gasto</label>
                                 <select id="gastosTipo" required>
                                     <option value="">-- Selecciona --</option>
-                                    <option value="Combustible">⛽ Combustible</option>
-                                    <option value="Repuesto">🔧 Repuesto</option>
-                                    <option value="Mantenimiento">🛠️ Mantenimiento</option>
+                                    <option value="Combustible">Combustible</option>
+                                    <option value="Repuesto">Repuesto</option>
+                                    <option value="Mantenimiento">Mantenimiento</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -790,12 +790,12 @@
                                 <label>Foto de Factura</label>
                                 <div class="photo-preview" id="gastosFacturaPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('gastosFactura')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('gastosFactura')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('gastosFactura')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('gastosFactura')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="gastosFacturaGallery" accept="image/*" style="display:none;">
                             </div>
-                            <button type="button" class="btn-save" onclick="enviarGastoMoto()">📤 Enviar Gasto</button>
+                            <button type="button" class="btn-save btn-icon" onclick="enviarGastoMoto()"><span class="icon"><i data-lucide="send"></i></span> Enviar Gasto</button>
                         </form>
                     </div>
                 </div>
@@ -835,8 +835,8 @@
                                 <label>Foto del Casco</label>
                                 <div class="photo-preview" id="cascoCascoPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('cascoCasco')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('cascoCasco')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('cascoCasco')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('cascoCasco')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="cascoCascoGallery" accept="image/*" style="display:none;">
                             </div>
@@ -844,8 +844,8 @@
                                 <label>Foto Visera Levantada</label>
                                 <div class="photo-preview" id="cascoViseraPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('cascoVisera')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('cascoVisera')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('cascoVisera')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('cascoVisera')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="cascoViseraGallery" accept="image/*" style="display:none;">
                             </div>
@@ -853,8 +853,8 @@
                                 <label>Foto Seguro del Casco Puesto</label>
                                 <div class="photo-preview" id="cascoSeguroPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
-                                    <button type="button" class="btn-photo" onclick="openCamera('cascoSeguro')">📷 Tomar Foto</button>
-                                    <button type="button" class="btn-photo" onclick="openGallery('cascoSeguro')">🖼️ Galería</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('cascoSeguro')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
+                                    <button type="button" class="btn-photo btn-icon" onclick="openGallery('cascoSeguro')"><span class="icon"><i data-lucide="image"></i></span> Galería</button>
                                 </div>
                                 <input type="file" id="cascoSeguroGallery" accept="image/*" style="display:none;">
                             </div>
@@ -862,7 +862,7 @@
                                 <label for="cascoObservaciones">Observaciones</label>
                                 <textarea id="cascoObservaciones" rows="3" placeholder="Observaciones opcionales..."></textarea>
                             </div>
-                            <button type="button" class="btn-save" onclick="enviarCascoMoto()">📤 Enviar Inspección de Casco</button>
+                            <button type="button" class="btn-save btn-icon" onclick="enviarCascoMoto()"><span class="icon"><i data-lucide="send"></i></span> Enviar Inspección de Casco</button>
                         </form>
                     </div>
                 </div>
@@ -909,26 +909,26 @@
 
                 <!-- Filtros -->
                 <div class="sup-filtros">
-                    <div class="sup-filtros-title">🔍 Filtrar reportes</div>
+                    <div class="sup-filtros-title">Filtrar reportes</div>
                     <div class="sup-filtros-grid">
                         <select id="filtroModulo" onchange="aplicarFiltros()">
-                            <option value="">📂 Todos los módulos</option>
-                            <option value="Medidor">📡 Medidores</option>
-                            <option value="Error">⚠️ Errores en campo</option>
-                            <option value="Consumo">⚡ Bajo consumo</option>
-                            <option value="Reubicacion">📍 Reubicación</option>
-                            <option value="Postes">🪵 Postes derribados</option>
-                            <option value="Inspector">📋 Informe inspector</option>
-                            <option value="Factura">🧾 Facturas</option>
-                            <option value="MotoViaje">🛣️ Moto - Viaje</option>
-                            <option value="MotoInspeccion">🔍 Moto - Inspección</option>
-                            <option value="MotoGastos">💰 Moto - Gastos</option>
+                            <option value="">Todos los módulos</option>
+                            <option value="Medidor">Medidores</option>
+                            <option value="Error">Errores en campo</option>
+                            <option value="Consumo">Bajo consumo</option>
+                            <option value="Reubicacion">Reubicación</option>
+                            <option value="Postes">Postes derribados</option>
+                            <option value="Inspector">Informe inspector</option>
+                            <option value="Factura">Facturas</option>
+                            <option value="MotoViaje">Moto - Viaje</option>
+                            <option value="MotoInspeccion">Moto - Inspección</option>
+                            <option value="MotoGastos">Moto - Gastos</option>
                         </select>
                         <select id="filtroInspector" onchange="aplicarFiltros()">
-                            <option value="">👷 Todos los inspectores</option>
+                            <option value="">Todos los inspectores</option>
                         </select>
                         <input type="date" id="filtroFecha" onchange="aplicarFiltros()" placeholder="Fecha">
-                        <input type="text" id="filtroTexto" oninput="aplicarFiltros()" placeholder="🔎 Buscar...">
+                        <input type="text" id="filtroTexto" oninput="aplicarFiltros()" placeholder="Buscar...">
                     </div>
                     <div class="sup-filtros-actions">
                         <button class="btn-filtro-limpiar" onclick="limpiarFiltros()">✕ Limpiar filtros</button>
@@ -946,7 +946,7 @@
         <div id="inspectoresModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="document.getElementById('inspectoresModal').style.display='none'">&times;</span>
-                <h2>👷 Gestionar Inspectores</h2>
+                <h2>Gestionar Inspectores</h2>
                 <div class="form-group" style="display:flex;flex-direction:column;gap:8px;">
                     <select id="nuevoInspectorSede" style="width:100%;padding:12px 16px;border:2px solid var(--gray-200);border-radius:8px;font-size:15px;">
                         <option value="">-- Sub-sede --</option>
@@ -955,7 +955,7 @@
                     </select>
                     <div style="display:flex;gap:8px;">
                         <input type="text" id="nuevoInspectorInput" placeholder="Nombre del inspector" style="flex:1;">
-                        <button type="button" class="btn-save" style="width:auto;padding:12px 18px;" onclick="agregarInspector()">+ Agregar</button>
+                        <button type="button" class="btn-save btn-icon" style="width:auto;padding:12px 18px;" onclick="agregarInspector()">+ Agregar</button>
                     </div>
                 </div>
                 <div id="inspectoresList" style="margin-top:12px;max-height:320px;overflow-y:auto;"></div>
@@ -966,7 +966,7 @@
         <div id="scriptConfigModal" class="modal">
             <div class="modal-content">
                 <span class="close" onclick="document.getElementById('scriptConfigModal').style.display='none'">&times;</span>
-                <h2>⚙️ Configurar Google Apps Script</h2>
+                <h2>Configurar Google Apps Script</h2>
                 <p style="color:var(--gray-500);font-size:14px;margin-bottom:20px;">
                     Pega aquí la URL del Web App de tu Google Apps Script.
                 </p>
@@ -975,14 +975,14 @@
                     <input type="url" id="cfgScriptUrl" placeholder="https://script.google.com/macros/s/...">
                 </div>
                 <div style="background:var(--primary-light);border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:var(--gray-700);">
-                    <strong>📋 Pasos:</strong><br>
+                    <strong>Pasos:</strong><br>
                     1. Ve a script.google.com y crea un nuevo proyecto<br>
                     2. Pega el código de google-apps-script.js<br>
                     3. Clic en Implementar → Nueva implementación<br>
                     4. Tipo: Aplicación web → Ejecutar como: Yo → Acceso: Cualquier persona<br>
                     5. Copia la URL y pégala aquí
                 </div>
-                <button class="btn-save" onclick="guardarConfigScript()">💾 Guardar URL</button>
+                <button class="btn-save btn-icon" onclick="guardarConfigScript()">Guardar URL</button>
             </div>
         </div>
 
@@ -990,12 +990,12 @@
         <div id="cameraModal" class="modal">
             <div class="modal-content camera-modal">
                 <span class="close" onclick="closeCamera()">&times;</span>
-                <h2>📷 Tomar Foto</h2>
+                <h2><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</h2>
                 <video id="cameraVideo" autoplay></video>
                 <canvas id="cameraCanvas" style="display:none;"></canvas>
                 <div class="camera-controls">
-                    <button type="button" class="btn-save" onclick="capturePhoto()">Capturar</button>
-                    <button type="button" class="btn-secondary-light" onclick="voltearCamara()">🔄 Voltear</button>
+                    <button type="button" class="btn-save btn-icon" onclick="capturePhoto()">Capturar</button>
+                    <button type="button" class="btn-secondary-light btn-icon" onclick="voltearCamara()"><span class="icon"><i data-lucide="flip-horizontal-2"></i></span> Voltear</button>
                     <button type="button" class="btn-secondary-light" onclick="closeCamera()">Cancelar</button>
                 </div>
             </div>

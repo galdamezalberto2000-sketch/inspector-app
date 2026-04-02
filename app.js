@@ -83,13 +83,13 @@ function guardarEnCola(tipo, campos) {
   const cola = JSON.parse(localStorage.getItem('cola_pendientes') || '[]');
   cola.push({ tipo, campos, ts: Date.now() });
   localStorage.setItem('cola_pendientes', JSON.stringify(cola));
-  console.log('📥 Guardado en cola. Pendientes:', cola.length);
+  console.log('Guardado en cola. Pendientes:', cola.length);
 }
 
 async function procesarCola() {
   const cola = JSON.parse(localStorage.getItem('cola_pendientes') || '[]');
   if (cola.length === 0) return;
-  console.log('🔄 Procesando cola:', cola.length, 'pendientes');
+  console.log('Procesando cola:', cola.length, 'pendientes');
   const restantes = [];
   for (const item of cola) {
     const ok = await enviarPorCorreo(item.tipo, item.campos);
@@ -97,13 +97,13 @@ async function procesarCola() {
   }
   localStorage.setItem('cola_pendientes', JSON.stringify(restantes));
   if (restantes.length < cola.length) {
-    console.log('✅ Enviados:', cola.length - restantes.length, '| Pendientes:', restantes.length);
+    console.log('Enviados:', cola.length - restantes.length, '| Pendientes:', restantes.length);
   }
 }
 
 // Procesar cola automáticamente cuando regresa la conexión
 window.addEventListener('online', () => {
-  console.log('🌐 Conexión restaurada — procesando cola...');
+  console.log('Conexión restaurada — procesando cola...');
   procesarCola();
 });
 
@@ -615,7 +615,7 @@ inspectorForm.addEventListener('submit', async (e) => {
     }
 
     const btn = inspectorForm.querySelector('.btn-save');
-    btn.textContent = '⏳ Enviando...';
+    btn.textContent = 'Enviando...';
     btn.disabled = true;
 
     guardarReporte('Inspector', {
@@ -623,7 +623,7 @@ inspectorForm.addEventListener('submit', async (e) => {
         fotoFactura: facturaPhoto, fotoMoto: motoPhoto
     });
 
-    enviarEnSegundoPlano('📋 Informe de Inspector - ' + currentUser, {
+    enviarEnSegundoPlano('Informe de Inspector - ' + currentUser, {
         'Usuario':          currentUser,
         'Fecha_Generacion': fechaGeneracion,
         'Fecha_Factura':    fechaFactura,
@@ -637,9 +637,9 @@ inspectorForm.addEventListener('submit', async (e) => {
     motoPhoto = null;
     document.getElementById('facturaPreview').innerHTML = '<p>No hay foto</p>';
     document.getElementById('motoPreview').innerHTML = '<p>No hay foto</p>';
-    btn.textContent = '📤 Enviar Informe';
+    btn.textContent = 'Enviar Informe';
     btn.disabled = false;
-    alert('✅ Informe guardado. Correo enviándose en segundo plano.');
+    alert('Informe guardado. Correo enviándose en segundo plano.');
 });
 
 // Función para generar PDF y enviar por correo usando FormSubmit
@@ -745,7 +745,7 @@ async function generarYEnviarPDF(informe) {
 }
 
 function mostrarOpcionesCompartir(informe) {
-    const texto = `📄 *Informe de Inspector #${informe.id}*\n\nUsuario: ${informe.usuario}\nFecha: ${informe.fechaGeneracion}\nFactura: ${informe.fechaFactura}\n\nEl PDF fue descargado en el dispositivo.`;
+    const texto = `*Informe de Inspector #${informe.id}*\n\nUsuario: ${informe.usuario}\nFecha: ${informe.fechaGeneracion}\nFactura: ${informe.fechaFactura}\n\nEl PDF fue descargado en el dispositivo.`;
     const textoWA = encodeURIComponent(texto);
     const asunto = encodeURIComponent(`Informe Inspector #${informe.id}`);
     const cuerpoEmail = encodeURIComponent(`Informe de Inspector\n\nUsuario: ${informe.usuario}\nFecha: ${informe.fechaGeneracion}\nFactura: ${informe.fechaFactura}\n\nEl PDF adjunto fue descargado en el dispositivo.`);
@@ -765,25 +765,25 @@ function mostrarOpcionesCompartir(informe) {
     modal.style.display = 'flex';
     modal.innerHTML = `
         <div style="background:white; border-radius:16px; padding:28px; max-width:400px; width:100%; box-shadow:0 20px 40px rgba(0,0,0,0.2);">
-            <h2 style="font-size:18px; font-weight:700; margin-bottom:6px; color:#1e293b;">✅ PDF descargado</h2>
+            <h2 style="font-size:18px; font-weight:700; margin-bottom:6px; color:#1e293b;">PDF descargado</h2>
             <p style="color:#64748b; font-size:13px; margin-bottom:20px;">El PDF está en tu carpeta de descargas. Ahora puedes compartirlo:</p>
 
             <a href="https://wa.me/?text=${textoWA}" target="_blank"
                 style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:#dcfce7; border:2px solid #16a34a;
                 border-radius:10px; text-decoration:none; color:#15803d; font-weight:600; font-size:15px; margin-bottom:10px;">
-                <span style="font-size:24px;">💬</span>
+                <span style="font-size:24px;"></span>
                 <span>Compartir por WhatsApp</span>
             </a>
 
             <a href="mailto:galdamezalberto2000@gmail.com?subject=${asunto}&body=${cuerpoEmail}"
                 style="display:flex; align-items:center; gap:12px; padding:14px 16px; background:#eff6ff; border:2px solid #2563eb;
                 border-radius:10px; text-decoration:none; color:#1d4ed8; font-weight:600; font-size:15px; margin-bottom:10px;">
-                <span style="font-size:24px;">📧</span>
+                <span style="font-size:24px;"></span>
                 <span>Enviar por correo</span>
             </a>
 
             <p style="color:#94a3b8; font-size:12px; text-align:center; margin:12px 0;">
-                💡 Adjunta el PDF manualmente desde tu carpeta de descargas
+                Adjunta el PDF manualmente desde tu carpeta de descargas
             </p>
 
             <button onclick="document.getElementById('compartirModal').style.display='none'"
@@ -900,7 +900,7 @@ function renderInformes() {
     const informesList = document.getElementById('informesList');
     
     if (informes.length === 0) {
-        informesList.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>No hay informes guardados</p></div>';
+        informesList.innerHTML = '<div class="empty-state"><div class="empty-icon"></div><p>No hay informes guardados</p></div>';
         return;
     }
     
@@ -927,8 +927,8 @@ function renderInformes() {
                 </div>
             </div>
             <div class="card-actions">
-                <button class="btn-download" onclick="generarPDF(informes.find(i => i.id === ${informe.id}))">📥 Descargar PDF</button>
-                <button class="btn-delete" onclick="deleteInforme(${informe.id})">🗑️ Eliminar</button>
+                <button class="btn-download" onclick="generarPDF(informes.find(i => i.id === ${informe.id}))">Descargar PDF</button>
+                <button class="btn-delete" onclick="deleteInforme(${informe.id})">Eliminar</button>
             </div>
         `;
         informesList.appendChild(card);
@@ -987,9 +987,9 @@ function aplicarCoordsManuales(modulo) {
     document.getElementById(cfg.hidLat).value = lat;
     document.getElementById(cfg.hidLng).value = lng;
     document.getElementById(cfg.box).innerHTML = `
-        <p>📍 <strong>Coordenadas manuales</strong></p>
+        <p><strong>Coordenadas manuales</strong></p>
         <p>Lat: ${lat} | Lng: ${lng}</p>
-        <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">🗺️ Ver en Google Maps</a>`;
+        <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">Ver en Google Maps</a>`;
     document.getElementById(cfg.box).classList.add('active');
 }
 
@@ -1005,7 +1005,7 @@ function obtenerCoordenadas() {
     }
 
     btn.disabled = true;
-    btn.textContent = '⏳ Obteniendo ubicación...';
+    btn.textContent = 'Obteniendo ubicación...';
     coordsText.textContent = 'Buscando señal GPS...';
 
     navigator.geolocation.getCurrentPosition(
@@ -1020,16 +1020,16 @@ function obtenerCoordenadas() {
             coordsBox.classList.add('active');
             coordsBox.innerHTML = `
                 <div>
-                    <p>📍 Lat: <strong>${lat}</strong> | Lng: <strong>${lng}</strong></p>
+                    <p>Lat: <strong>${lat}</strong> | Lng: <strong>${lng}</strong></p>
                     <p style="font-size:12px; color:#888;">Precisión: ±${accuracy} metros</p>
                     <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">
-                        🗺️ Ver en Google Maps
+                        Ver en Google Maps
                     </a>
                 </div>
             `;
 
             btn.disabled = false;
-            btn.textContent = '✅ Ubicación obtenida - Actualizar';
+            btn.textContent = 'Ubicación obtenida - Actualizar';
         },
         (error) => {
             let msg = 'Error al obtener ubicación';
@@ -1039,7 +1039,7 @@ function obtenerCoordenadas() {
 
             coordsText.textContent = msg;
             btn.disabled = false;
-            btn.textContent = '📍 Obtener Ubicación';
+            btn.textContent = 'Obtener Ubicación';
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
@@ -1059,7 +1059,7 @@ document.getElementById('medidorForm').addEventListener('submit', async (e) => {
     const reporte = { id: Date.now(), numMedidor, foto: medidorFoto, lat: lat||null, lng: lng||null, observaciones, usuario: currentUser, fecha: new Date().toLocaleString('es') };
 
     const btn = document.querySelector('#medidoresScreen .btn-save');
-    btn.textContent = '⏳ Enviando...'; btn.disabled = true;
+    btn.textContent = 'Enviando...'; btn.disabled = true;
 
     guardarReporte('Medidor', {
         inspector: currentUser,
@@ -1067,7 +1067,7 @@ document.getElementById('medidorForm').addEventListener('submit', async (e) => {
         foto: medidorFoto
     });
 
-    enviarEnSegundoPlano('📡 Medidor fuera de línea - ' + currentUser, {
+    enviarEnSegundoPlano('Medidor fuera de línea - ' + currentUser, {
         'Usuario': currentUser, 'Fecha': reporte.fecha,
         'Numero_Medidor': numMedidor,
         'Latitud': lat || 'No registrada', 'Longitud': lng || 'No registrada',
@@ -1081,10 +1081,10 @@ document.getElementById('medidorForm').addEventListener('submit', async (e) => {
     document.getElementById('medidorFotoPreview').innerHTML = '<p>No hay foto</p>';
     document.getElementById('coordsBox').classList.remove('active');
     document.getElementById('coordsBox').innerHTML = '<p id="coordsText">Sin coordenadas</p>';
-    document.querySelector('#medidoresScreen .btn-coords').textContent = '📍 Obtener Ubicación';
-    btn.textContent = '📤 Enviar Reporte'; btn.disabled = false;
+    document.querySelector('#medidoresScreen .btn-coords').textContent = 'Obtener Ubicación';
+    btn.textContent = 'Enviar Reporte'; btn.disabled = false;
     generarPDFMedidor(reporte);
-    alert('✅ Reporte enviado al correo correctamente.');
+    alert('Reporte enviado al correo correctamente.');
 });
 
 // Generar PDF medidor
@@ -1174,7 +1174,7 @@ function generarPDFMedidor(reporte) {
 function renderMedidores() {
     const lista = document.getElementById('medidoresList');
     if (medidores.length === 0) {
-        lista.innerHTML = '<div class="empty-state"><div class="empty-icon">📡</div><p>No hay reportes guardados</p></div>';
+        lista.innerHTML = '<div class="empty-state"><div class="empty-icon"></div><p>No hay reportes guardados</p></div>';
         return;
     }
     lista.innerHTML = '';
@@ -1186,12 +1186,12 @@ function renderMedidores() {
             <p><strong>Usuario:</strong> ${r.usuario}</p>
             <p><strong>Fecha:</strong> ${r.fecha}</p>
             <p><strong>Coordenadas:</strong> ${r.lat ? `${r.lat}, ${r.lng}` : 'No registradas'}</p>
-            ${r.lat ? `<a class="map-link" href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank">🗺️ Ver en Google Maps</a>` : ''}
+            ${r.lat ? `<a class="map-link" href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank">Ver en Google Maps</a>` : ''}
             ${r.observaciones ? `<p><strong>Observaciones:</strong> ${r.observaciones}</p>` : ''}
             <div class="informe-photos"><div><img src="${r.foto}" alt="Medidor"></div></div>
             <div class="card-actions">
-                <button class="btn-download" onclick="generarPDFMedidor(medidores.find(m => m.id === ${r.id}))">📥 Descargar PDF</button>
-                <button class="btn-delete" onclick="deleteMedidor(${r.id})">🗑️ Eliminar</button>
+                <button class="btn-download" onclick="generarPDFMedidor(medidores.find(m => m.id === ${r.id}))">Descargar PDF</button>
+                <button class="btn-delete" onclick="deleteMedidor(${r.id})">Eliminar</button>
             </div>
         `;
         lista.appendChild(card);
@@ -1235,7 +1235,7 @@ function obtenerCoordenadasError() {
     }
 
     btn.disabled = true;
-    btn.textContent = '⏳ Obteniendo ubicación...';
+    btn.textContent = 'Obteniendo ubicación...';
     coordsBox.innerHTML = '<p>Buscando señal GPS...</p>';
 
     navigator.geolocation.getCurrentPosition(
@@ -1250,13 +1250,13 @@ function obtenerCoordenadasError() {
             coordsBox.classList.add('active');
             coordsBox.innerHTML = `
                 <div>
-                    <p>📍 Lat: <strong>${lat}</strong> | Lng: <strong>${lng}</strong></p>
+                    <p>Lat: <strong>${lat}</strong> | Lng: <strong>${lng}</strong></p>
                     <p style="font-size:12px; color:#888;">Precisión: ±${accuracy} metros</p>
-                    <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">🗺️ Ver en Google Maps</a>
+                    <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">Ver en Google Maps</a>
                 </div>
             `;
             btn.disabled = false;
-            btn.textContent = '✅ Ubicación obtenida - Actualizar';
+            btn.textContent = 'Ubicación obtenida - Actualizar';
         },
         (error) => {
             let msg = 'Error al obtener ubicación';
@@ -1265,7 +1265,7 @@ function obtenerCoordenadasError() {
             if (error.code === 3) msg = 'Tiempo agotado. Intenta de nuevo.';
             coordsBox.innerHTML = `<p>${msg}</p>`;
             btn.disabled = false;
-            btn.textContent = '📍 Obtener Ubicación';
+            btn.textContent = 'Obtener Ubicación';
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
@@ -1292,7 +1292,7 @@ document.getElementById('erroresForm').addEventListener('submit', async (e) => {
     };
 
     const btn = document.querySelector('#erroresScreen .btn-save');
-    btn.textContent = '⏳ Enviando...'; btn.disabled = true;
+    btn.textContent = 'Enviando...'; btn.disabled = true;
 
     guardarReporte('Error', {
         inspector: r.inspector, fecha: r.fecha, clave: r.clave,
@@ -1301,7 +1301,7 @@ document.getElementById('erroresForm').addEventListener('submit', async (e) => {
         foto: r.foto
     });
 
-    enviarEnSegundoPlano('⚠️ Error en campo - ' + r.inspector, {
+    enviarEnSegundoPlano('Advertencia: Error en campo - ' + r.inspector, {
         'Usuario': currentUser, 'Fecha': r.fecha, 'Inspector': r.inspector,
         'Clave': r.clave, 'Numero_Medidor': r.numMedidor,
         'Lectura_Correcta': r.lecturaCorrecta, 'Lectura_Incorrecta': r.lecturaIncorrecta,
@@ -1317,10 +1317,10 @@ document.getElementById('erroresForm').addEventListener('submit', async (e) => {
     document.getElementById('errorFotoPreview').innerHTML = '<p>No hay foto</p>';
     document.getElementById('errorCoordsBox').classList.remove('active');
     document.getElementById('errorCoordsBox').innerHTML = '<p id="errorCoordsText">Sin coordenadas</p>';
-    document.querySelector('#erroresScreen .btn-coords').textContent = '📍 Obtener Ubicación';
+    document.querySelector('#erroresScreen .btn-coords').textContent = 'Obtener Ubicación';
     document.getElementById('errorFecha').value = new Date().toLocaleString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
-    btn.textContent = '📤 Enviar Reporte'; btn.disabled = false;
-    alert('✅ Reporte enviado al correo correctamente.');
+    btn.textContent = 'Enviar Reporte'; btn.disabled = false;
+    alert('Reporte enviado al correo correctamente.');
 });
 
 // Generar PDF error
@@ -1404,7 +1404,7 @@ function generarPDFError(r) {
 function renderErrores() {
     const lista = document.getElementById('erroresList');
     if (errores.length === 0) {
-        lista.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><p>No hay reportes guardados</p></div>';
+        lista.innerHTML = '<div class="empty-state"><div class="empty-icon"></div><p>No hay reportes guardados</p></div>';
         return;
     }
     lista.innerHTML = '';
@@ -1418,11 +1418,11 @@ function renderErrores() {
             <p><strong>Medidor:</strong> ${r.numMedidor}</p>
             <p><strong>Lectura Correcta:</strong> ${r.lecturaCorrecta}</p>
             <p><strong>Lectura Incorrecta:</strong> ${r.lecturaIncorrecta}</p>
-            ${r.lat ? `<a class="map-link" href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank">🗺️ Ver en Google Maps</a>` : '<p><strong>Coordenadas:</strong> No registradas</p>'}
+            ${r.lat ? `<a class="map-link" href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank">Ver en Google Maps</a>` : '<p><strong>Coordenadas:</strong> No registradas</p>'}
             <div class="informe-photos"><div><img src="${r.foto}" alt="Medidor"></div></div>
             <div class="card-actions">
-                <button class="btn-download" onclick="generarPDFError(errores.find(e => e.id === ${r.id}))">📥 Descargar PDF</button>
-                <button class="btn-delete" onclick="deleteError(${r.id})">🗑️ Eliminar</button>
+                <button class="btn-download" onclick="generarPDFError(errores.find(e => e.id === ${r.id}))">Descargar PDF</button>
+                <button class="btn-delete" onclick="deleteError(${r.id})">Eliminar</button>
             </div>
         `;
         lista.appendChild(card);
@@ -1480,7 +1480,7 @@ function obtenerCoordenadasConsumo() {
     }
 
     btn.disabled = true;
-    btn.textContent = '⏳ Obteniendo ubicación...';
+    btn.textContent = 'Obteniendo ubicación...';
     coordsBox.innerHTML = '<p>Buscando señal GPS...</p>';
 
     navigator.geolocation.getCurrentPosition(
@@ -1495,13 +1495,13 @@ function obtenerCoordenadasConsumo() {
             coordsBox.classList.add('active');
             coordsBox.innerHTML = `
                 <div>
-                    <p>📍 Lat: <strong>${lat}</strong> | Lng: <strong>${lng}</strong></p>
+                    <p>Lat: <strong>${lat}</strong> | Lng: <strong>${lng}</strong></p>
                     <p style="font-size:12px; color:#888;">Precisión: ±${accuracy} metros</p>
-                    <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">🗺️ Ver en Google Maps</a>
+                    <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">Ver en Google Maps</a>
                 </div>
             `;
             btn.disabled = false;
-            btn.textContent = '✅ Ubicación obtenida - Actualizar';
+            btn.textContent = 'Ubicación obtenida - Actualizar';
         },
         (error) => {
             let msg = 'Error al obtener ubicación';
@@ -1510,7 +1510,7 @@ function obtenerCoordenadasConsumo() {
             if (error.code === 3) msg = 'Tiempo agotado. Intenta de nuevo.';
             coordsBox.innerHTML = `<p>${msg}</p>`;
             btn.disabled = false;
-            btn.textContent = '📍 Obtener Ubicación';
+            btn.textContent = 'Obtener Ubicación';
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
@@ -1534,7 +1534,7 @@ document.getElementById('consumoForm').addEventListener('submit', async (e) => {
     };
 
     const btn = document.querySelector('#consumoScreen .btn-save');
-    btn.textContent = '⏳ Enviando...'; btn.disabled = true;
+    btn.textContent = 'Enviando...'; btn.disabled = true;
 
     guardarReporte('Consumo', {
         inspector: currentUser, fecha: r.fecha, clave: r.clave,
@@ -1558,11 +1558,11 @@ document.getElementById('consumoForm').addEventListener('submit', async (e) => {
     document.getElementById('consumoMedidorPreview').innerHTML = '<p>No hay foto</p>';
     document.getElementById('consumoCoordsBox').classList.remove('active');
     document.getElementById('consumoCoordsBox').innerHTML = '<p>Sin coordenadas</p>';
-    document.querySelector('#consumoScreen .btn-coords').textContent = '📍 Obtener Ubicación';
+    document.querySelector('#consumoScreen .btn-coords').textContent = 'Obtener Ubicación';
     document.getElementById('consumoFecha').value = new Date().toLocaleString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
-    btn.textContent = '📤 Enviar Reporte'; btn.disabled = false;
+    btn.textContent = 'Enviar Reporte'; btn.disabled = false;
     generarPDFConsumo(r);
-    alert('✅ Reporte enviado al correo correctamente.');
+    alert('Reporte enviado al correo correctamente.');
 });
 
 // Generar PDF consumo
@@ -1658,7 +1658,7 @@ function generarPDFConsumo(r) {
 function renderConsumo() {
     const lista = document.getElementById('consumoList');
     if (consumos.length === 0) {
-        lista.innerHTML = '<div class="empty-state"><div class="empty-icon">⚡</div><p>No hay reportes guardados</p></div>';
+        lista.innerHTML = '<div class="empty-state"><div class="empty-icon"></div><p>No hay reportes guardados</p></div>';
         return;
     }
     lista.innerHTML = '';
@@ -1671,15 +1671,15 @@ function renderConsumo() {
             <p><strong>Medidor:</strong> ${r.numMedidor}</p>
             <p><strong>Usuario:</strong> ${r.usuario}</p>
             ${r.observaciones ? `<p><strong>Observaciones:</strong> ${r.observaciones}</p>` : ''}
-            ${r.lat ? `<a class="map-link" href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank">🗺️ Ver en Google Maps</a>` : '<p><strong>Coordenadas:</strong> No registradas</p>'}
+            ${r.lat ? `<a class="map-link" href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank">Ver en Google Maps</a>` : '<p><strong>Coordenadas:</strong> No registradas</p>'}
             ${(r.fachadaFoto || r.medidorFoto) ? `
             <div class="informe-photos">
                 ${r.fachadaFoto ? `<div><p><strong>Fachada:</strong></p><img src="${r.fachadaFoto}" alt="Fachada"></div>` : ''}
                 ${r.medidorFoto ? `<div><p><strong>Medidor:</strong></p><img src="${r.medidorFoto}" alt="Medidor"></div>` : ''}
             </div>` : ''}
             <div class="card-actions">
-                <button class="btn-download" onclick="generarPDFConsumo(consumos.find(c => c.id === ${r.id}))">📥 Descargar PDF</button>
-                <button class="btn-delete" onclick="deleteConsumo(${r.id})">🗑️ Eliminar</button>
+                <button class="btn-download" onclick="generarPDFConsumo(consumos.find(c => c.id === ${r.id}))">Descargar PDF</button>
+                <button class="btn-delete" onclick="deleteConsumo(${r.id})">Eliminar</button>
             </div>
         `;
         lista.appendChild(card);
@@ -1733,7 +1733,7 @@ function obtenerCoordenadasReubicacion() {
     if (!navigator.geolocation) { alert('Tu dispositivo no soporta geolocalización'); return; }
 
     btn.disabled = true;
-    btn.textContent = '⏳ Obteniendo ubicación...';
+    btn.textContent = 'Obteniendo ubicación...';
     coordsBox.innerHTML = '<p>Buscando señal GPS...</p>';
 
     navigator.geolocation.getCurrentPosition(
@@ -1748,12 +1748,12 @@ function obtenerCoordenadasReubicacion() {
             coordsBox.classList.add('active');
             coordsBox.innerHTML = `
                 <div>
-                    <p>📍 Lat: <strong>${lat}</strong> | Lng: <strong>${lng}</strong></p>
+                    <p>Lat: <strong>${lat}</strong> | Lng: <strong>${lng}</strong></p>
                     <p style="font-size:12px; color:#888;">Precisión: ±${accuracy} metros</p>
-                    <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">🗺️ Ver en Google Maps</a>
+                    <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">Ver en Google Maps</a>
                 </div>`;
             btn.disabled = false;
-            btn.textContent = '✅ Ubicación obtenida - Actualizar';
+            btn.textContent = 'Ubicación obtenida - Actualizar';
         },
         (error) => {
             let msg = 'Error al obtener ubicación';
@@ -1762,7 +1762,7 @@ function obtenerCoordenadasReubicacion() {
             if (error.code === 3) msg = 'Tiempo agotado. Intenta de nuevo.';
             coordsBox.innerHTML = `<p>${msg}</p>`;
             btn.disabled = false;
-            btn.textContent = '📍 Obtener Ubicación';
+            btn.textContent = 'Obtener Ubicación';
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
@@ -1785,7 +1785,7 @@ document.getElementById('reubicacionForm').addEventListener('submit', async (e) 
     };
 
     const btn = document.querySelector('#reubicacionScreen .btn-save');
-    btn.textContent = '⏳ Enviando...'; btn.disabled = true;
+    btn.textContent = 'Enviando...'; btn.disabled = true;
 
     guardarReporte('Reubicacion', {
         inspector: currentUser, fecha: r.fecha, clave: r.clave,
@@ -1794,7 +1794,7 @@ document.getElementById('reubicacionForm').addEventListener('submit', async (e) 
         fotoFachada: reubicacionFachadaFoto, fotoMedidor: reubicacionMedidorFoto
     });
 
-    enviarEnSegundoPlano('📍 Reubicación - Clave ' + r.clave, {
+    enviarEnSegundoPlano('Reubicación - Clave ' + r.clave, {
         'Usuario': currentUser, 'Fecha': r.fecha, 'Clave': r.clave,
         'Numero_Medidor': r.numMedidor, 'Observaciones': r.observaciones || 'Ninguna',
         'Latitud': r.lat || 'No registrada', 'Longitud': r.lng || 'No registrada',
@@ -1809,11 +1809,11 @@ document.getElementById('reubicacionForm').addEventListener('submit', async (e) 
     document.getElementById('reubicacionMedidorPreview').innerHTML = '<p>No hay foto</p>';
     document.getElementById('reubicacionCoordsBox').classList.remove('active');
     document.getElementById('reubicacionCoordsBox').innerHTML = '<p>Sin coordenadas</p>';
-    document.querySelector('#reubicacionScreen .btn-coords').textContent = '📍 Obtener Ubicación';
+    document.querySelector('#reubicacionScreen .btn-coords').textContent = 'Obtener Ubicación';
     document.getElementById('reubicacionFecha').value = new Date().toLocaleString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
-    btn.textContent = '📤 Enviar Reporte'; btn.disabled = false;
+    btn.textContent = 'Enviar Reporte'; btn.disabled = false;
     generarPDFReubicacion(r);
-    alert('✅ Reporte enviado al correo correctamente.');
+    alert('Reporte enviado al correo correctamente.');
 });
 
 function generarPDFReubicacion(r) {
@@ -1906,7 +1906,7 @@ function generarPDFReubicacion(r) {
 function renderReubicacion() {
     const lista = document.getElementById('reubicacionList');
     if (reubicaciones.length === 0) {
-        lista.innerHTML = '<div class="empty-state"><div class="empty-icon">📍</div><p>No hay reportes guardados</p></div>';
+        lista.innerHTML = '<div class="empty-state"><div class="empty-icon"></div><p>No hay reportes guardados</p></div>';
         return;
     }
     lista.innerHTML = '';
@@ -1919,15 +1919,15 @@ function renderReubicacion() {
             <p><strong>Medidor:</strong> ${r.numMedidor}</p>
             <p><strong>Usuario:</strong> ${r.usuario}</p>
             ${r.observaciones ? `<p><strong>Observaciones:</strong> ${r.observaciones}</p>` : ''}
-            ${r.lat ? `<a class="map-link" href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank">🗺️ Ver en Google Maps</a>` : '<p><strong>Coordenadas:</strong> No registradas</p>'}
+            ${r.lat ? `<a class="map-link" href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank">Ver en Google Maps</a>` : '<p><strong>Coordenadas:</strong> No registradas</p>'}
             ${(r.fachadaFoto || r.medidorFoto) ? `
             <div class="informe-photos">
                 ${r.fachadaFoto ? `<div><p><strong>Fachada:</strong></p><img src="${r.fachadaFoto}" alt="Fachada"></div>` : ''}
                 ${r.medidorFoto ? `<div><p><strong>Medidor:</strong></p><img src="${r.medidorFoto}" alt="Medidor"></div>` : ''}
             </div>` : ''}
             <div class="card-actions">
-                <button class="btn-download" onclick="generarPDFReubicacion(reubicaciones.find(r => r.id === ${r.id}))">📥 Descargar PDF</button>
-                <button class="btn-delete" onclick="deleteReubicacion(${r.id})">🗑️ Eliminar</button>
+                <button class="btn-download" onclick="generarPDFReubicacion(reubicaciones.find(r => r.id === ${r.id}))">Descargar PDF</button>
+                <button class="btn-delete" onclick="deleteReubicacion(${r.id})">Eliminar</button>
             </div>
         `;
         lista.appendChild(card);
@@ -1994,7 +1994,7 @@ function obtenerCoordenadasPostes() {
     if (!navigator.geolocation) { alert('Tu dispositivo no soporta geolocalización'); return; }
 
     btn.disabled = true;
-    btn.textContent = '⏳ Obteniendo ubicación...';
+    btn.textContent = 'Obteniendo ubicación...';
     coordsBox.innerHTML = '<p>Buscando señal GPS...</p>';
 
     navigator.geolocation.getCurrentPosition(
@@ -2009,12 +2009,12 @@ function obtenerCoordenadasPostes() {
             coordsBox.classList.add('active');
             coordsBox.innerHTML = `
                 <div>
-                    <p>📍 Lat: <strong>${lat}</strong> | Lng: <strong>${lng}</strong></p>
+                    <p>Lat: <strong>${lat}</strong> | Lng: <strong>${lng}</strong></p>
                     <p style="font-size:12px; color:#888;">Precisión: ±${accuracy} metros</p>
-                    <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">🗺️ Ver en Google Maps</a>
+                    <a class="map-link" href="https://www.google.com/maps?q=${lat},${lng}" target="_blank">Ver en Google Maps</a>
                 </div>`;
             btn.disabled = false;
-            btn.textContent = '✅ Ubicación obtenida - Actualizar';
+            btn.textContent = 'Ubicación obtenida - Actualizar';
         },
         (error) => {
             let msg = 'Error al obtener ubicación';
@@ -2023,7 +2023,7 @@ function obtenerCoordenadasPostes() {
             if (error.code === 3) msg = 'Tiempo agotado. Intenta de nuevo.';
             coordsBox.innerHTML = `<p>${msg}</p>`;
             btn.disabled = false;
-            btn.textContent = '📍 Obtener Ubicación';
+            btn.textContent = 'Obtener Ubicación';
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
@@ -2048,7 +2048,7 @@ document.getElementById('postesForm').addEventListener('submit', async (e) => {
     };
 
     const btn = document.querySelector('#postesScreen .btn-save');
-    btn.textContent = '⏳ Enviando...'; btn.disabled = true;
+    btn.textContent = 'Enviando...'; btn.disabled = true;
 
     guardarReporte('Postes', {
         inspector: currentUser, fecha: r.fecha, clave: r.clave,
@@ -2056,7 +2056,7 @@ document.getElementById('postesForm').addEventListener('submit', async (e) => {
         lat: r.lat, lng: r.lng, fotos: r.fotos
     });
 
-    enviarEnSegundoPlano('🪵 Postes derribados - Clave ' + r.clave, {
+    enviarEnSegundoPlano('Postes derribados - Clave ' + r.clave, {
         'Usuario': currentUser, 'Fecha': r.fecha, 'Clave': r.clave,
         'Contiguo': r.contiguo, 'Cantidad_Fotos': r.fotos.length,
         'Observaciones': r.observaciones || 'Ninguna',
@@ -2070,11 +2070,11 @@ document.getElementById('postesForm').addEventListener('submit', async (e) => {
     actualizarGaleriaPostes();
     document.getElementById('postesCoordsBox').classList.remove('active');
     document.getElementById('postesCoordsBox').innerHTML = '<p>Sin coordenadas</p>';
-    document.querySelector('#postesScreen .btn-coords').textContent = '📍 Obtener Ubicación';
+    document.querySelector('#postesScreen .btn-coords').textContent = 'Obtener Ubicación';
     document.getElementById('postesFecha').value = new Date().toLocaleString('es-ES', { year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
-    btn.textContent = '📤 Enviar Reporte'; btn.disabled = false;
+    btn.textContent = 'Enviar Reporte'; btn.disabled = false;
     generarPDFPostes(r);
-    alert('✅ Reporte enviado al correo correctamente.');
+    alert('Reporte enviado al correo correctamente.');
 });
 
 // Generar PDF postes
@@ -2188,11 +2188,11 @@ function renderPostes() {
             <p><strong>Contiguo:</strong> ${r.contiguo}</p>
             <p><strong>Usuario:</strong> ${r.usuario}</p>
             ${r.observaciones ? `<p><strong>Observaciones:</strong> ${r.observaciones}</p>` : ''}
-            ${r.lat ? `<a class="map-link" href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank">🗺️ Ver en Google Maps</a>` : '<p><strong>Coordenadas:</strong> No registradas</p>'}
+            ${r.lat ? `<a class="map-link" href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank">Ver en Google Maps</a>` : '<p><strong>Coordenadas:</strong> No registradas</p>'}
             <div class="informe-photos">${fotosHTML}</div>
             <div class="card-actions">
-                <button class="btn-download" onclick="generarPDFPostes(postes.find(p => p.id === ${r.id}))">📥 Descargar PDF</button>
-                <button class="btn-delete" onclick="deletePoste(${r.id})">🗑️ Eliminar</button>
+                <button class="btn-download" onclick="generarPDFPostes(postes.find(p => p.id === ${r.id}))">Descargar PDF</button>
+                <button class="btn-delete" onclick="deletePoste(${r.id})">Eliminar</button>
             </div>
         `;
         lista.appendChild(card);
@@ -2232,7 +2232,7 @@ function guardarConfigEmail() {
     localStorage.setItem('ejs_pubkey',   pubkey);
 
     document.getElementById('emailConfigModal').style.display = 'none';
-    alert('✅ Configuración guardada. Ahora los PDFs se enviarán a tu correo.');
+    alert('Configuración guardada. Ahora los PDFs se enviarán a tu correo.');
 }
 
 
@@ -2248,7 +2248,7 @@ function guardarConfigScript() {
     if (!url) { alert('Por favor ingresa la URL'); return; }
     localStorage.setItem('gas_url', url);
     document.getElementById('scriptConfigModal').style.display = 'none';
-    alert('✅ URL guardada correctamente.');
+    alert('URL guardada correctamente.');
 }
 
 
@@ -2338,15 +2338,15 @@ document.getElementById('facturasForm').addEventListener('submit', async (e) => 
         camposCorreo[key] = foto;
     });
 
-    enviarEnSegundoPlano(`🧾 Factura ${tipo} - ${inspector}`, camposCorreo);
+    enviarEnSegundoPlano(`Factura ${tipo} - ${inspector}`, camposCorreo);
 
     document.getElementById('facturasForm').reset();
     facturasFotos = [];
     actualizarGaleriaFacturas();
     document.getElementById('facturasFecha').value = new Date().toISOString().split('T')[0];
-    btn.textContent = '📤 Enviar y Descargar PDF';
+    btn.textContent = 'Enviar y Descargar PDF';
     btn.disabled = false;
-    alert('✅ PDF descargado y reporte enviado al correo.');
+    alert('PDF descargado y reporte enviado al correo.');
 });
 
 function generarPDFFactura(r) {
@@ -2515,7 +2515,7 @@ function guardarKmInicial() {
     document.getElementById('viajeFecha').value = new Date().toISOString().split('T')[0];
 
     verificarViajeEnCurso();
-    alert('✅ Kilometraje inicial guardado. Completa el registro con el kilometraje final.');
+    alert('Kilometraje inicial guardado. Completa el registro con el kilometraje final.');
 }
 
 document.getElementById('motoViajeForm').addEventListener('submit', (e) => { e.preventDefault(); return false; });
@@ -2556,7 +2556,7 @@ async function completarViaje() {
     if (kmRecorridos < 0) { alert('El Km final debe ser mayor al inicial'); return; }
 
     const btn = document.querySelector('#viajeEnCursoBox .btn-save');
-    btn.textContent = '⏳ Enviando...'; btn.disabled = true;
+    btn.textContent = 'Enviando...'; btn.disabled = true;
 
     guardarReporte('MotoViaje', {
         inspector: viaje.inspector, fecha: viaje.fecha,
@@ -2566,7 +2566,7 @@ async function completarViaje() {
         fotoTablero: viajeTableroTardeFoto
     });
 
-    enviarEnSegundoPlano('🛣️ Registro de Viaje - ' + viaje.inspector, {
+    enviarEnSegundoPlano('Registro de Viaje - ' + viaje.inspector, {
         'Inspector': viaje.inspector, 'Fecha': viaje.fecha,
         'Km_Inicial': viaje.kmInicial, 'Km_Final': kmFinal,
         'Km_Recorridos': kmRecorridos,
@@ -2590,10 +2590,10 @@ async function completarViaje() {
     document.getElementById('viajeKmFinalTarde').value = '';
     document.getElementById('viajeKmFinalTardePreview').innerHTML = '<p>No hay foto</p>';
     document.getElementById('viajeTableroTardePreview').innerHTML = '<p>No hay foto</p>';
-    btn.textContent = '✅ Guardar Kilometraje Final'; btn.disabled = false;
+    btn.textContent = 'Guardar Kilometraje Final'; btn.disabled = false;
 
     verificarViajeEnCurso();
-    alert('✅ Registro completo. PDF descargado y correo enviándose.');
+    alert('Registro completo. PDF descargado y correo enviándose.');
 }
 
 function cancelarViaje() {
@@ -2612,7 +2612,7 @@ async function enviarInspeccionMoto() {
     if (!inspector || !fecha) { alert('Completa inspector y fecha'); return; }
 
     const btn = document.querySelector('#motoInspeccionForm .btn-save');
-    btn.textContent = '⏳ Enviando...'; btn.disabled = true;
+    btn.textContent = 'Enviando...'; btn.disabled = true;
 
     const fotos = {
         moto: inspeccionMotoFoto, retro: inspeccionRetroFoto,
@@ -2622,7 +2622,7 @@ async function enviarInspeccionMoto() {
     };
 
     guardarReporte('MotoInspeccion', { inspector, fecha, observaciones, fotos });
-    enviarEnSegundoPlano('🔍 Inspección Moto - ' + inspector, {
+    enviarEnSegundoPlano('Inspección Moto - ' + inspector, {
         'Inspector': inspector, 'Fecha': fecha,
         'Observaciones': observaciones || 'Ninguna',
         'Modulo': 'Inspección de Moto - Técnica',
@@ -2643,8 +2643,8 @@ async function enviarInspeccionMoto() {
      'inspeccionLucesDBPreview','inspeccionLucesDAPreview','inspeccionLucesTFPreview','inspeccionLucesTPPreview']
         .forEach(id => document.getElementById(id).innerHTML = '<p>No hay foto</p>');
     document.getElementById('inspeccionFecha').value = new Date().toISOString().split('T')[0];
-    btn.textContent = '📤 Enviar Inspección'; btn.disabled = false;
-    alert('✅ Inspección guardada y PDF descargado. Correo enviándose en segundo plano.');
+    btn.textContent = 'Enviar Inspección'; btn.disabled = false;
+    alert('Inspección guardada y PDF descargado. Correo enviándose en segundo plano.');
 }
 document.getElementById('motoInspeccionForm').addEventListener('submit', (e) => e.preventDefault());
 
@@ -2660,14 +2660,14 @@ async function enviarGastoMoto() {
     if (!inspector || !fecha || !tipo || !valor) { alert('Completa todos los campos'); return; }
 
     const btn = document.querySelector('#motoGastosForm .btn-save');
-    btn.textContent = '⏳ Enviando...'; btn.disabled = true;
+    btn.textContent = 'Enviando...'; btn.disabled = true;
 
     guardarReporte('MotoGastos', {
         inspector, fecha, tipo, descripcion,
         valor: `L. ${parseFloat(valor).toFixed(2)}`,
         fotoFactura: gastosFacturaFoto
     });
-    enviarEnSegundoPlano('💰 Gasto Moto - ' + inspector, {
+    enviarEnSegundoPlano('Gasto Moto - ' + inspector, {
         'Inspector': inspector, 'Fecha': fecha,
         'Tipo_Gasto': tipo, 'Descripcion': descripcion,
         'Valor': `L. ${parseFloat(valor).toFixed(2)}`,
@@ -2680,8 +2680,8 @@ async function enviarGastoMoto() {
     gastosFacturaFoto = null;
     document.getElementById('gastosFacturaPreview').innerHTML = '<p>No hay foto</p>';
     document.getElementById('gastosFecha').value = new Date().toISOString().split('T')[0];
-    btn.textContent = '📤 Enviar Gasto'; btn.disabled = false;
-    alert('✅ Gasto guardado y PDF descargado. Correo enviándose en segundo plano.');
+    btn.textContent = 'Enviar Gasto'; btn.disabled = false;
+    alert('Gasto guardado y PDF descargado. Correo enviándose en segundo plano.');
 }
 document.getElementById('motoGastosForm').addEventListener('submit', (e) => e.preventDefault());
 
@@ -2900,11 +2900,11 @@ async function enviarCascoMoto() {
     }
 
     const btn = document.querySelector('#motoCascoForm .btn-save');
-    btn.textContent = '⏳ Enviando...'; btn.disabled = true;
+    btn.textContent = 'Enviando...'; btn.disabled = true;
 
     guardarReporte('MotoCasco', { inspector, fecha, observaciones,
         fotoCasco: cascoCascoFoto, fotoVisera: cascoViseraFoto, fotoSeguro: cascoSeguroFoto });
-    enviarEnSegundoPlano('⛑️ Inspección Casco - ' + inspector, {
+    enviarEnSegundoPlano('Inspección Casco - ' + inspector, {
         'Inspector': inspector, 'Fecha': fecha,
         'Observaciones': observaciones || 'Ninguna',
         'Modulo': 'Inspección de Moto - Casco',
@@ -2921,8 +2921,8 @@ async function enviarCascoMoto() {
     document.getElementById('cascoViseraPreview').innerHTML = '<p>No hay foto</p>';
     document.getElementById('cascoSeguroPreview').innerHTML = '<p>No hay foto</p>';
     document.getElementById('cascoFecha').value = new Date().toISOString().split('T')[0];
-    btn.textContent = '📤 Enviar Inspección de Casco'; btn.disabled = false;
-    alert('✅ Inspección de casco guardada y PDF descargado. Correo enviándose en segundo plano.');
+    btn.textContent = 'Enviar Inspección de Casco'; btn.disabled = false;
+    alert('Inspección de casco guardada y PDF descargado. Correo enviándose en segundo plano.');
 }
 document.getElementById('motoCascoForm').addEventListener('submit', (e) => e.preventDefault());
 
@@ -3101,13 +3101,13 @@ function renderModalInspectores() {
         <div style="margin-bottom:16px;">
             <div style="font-weight:700;color:var(--primary);font-size:14px;padding:8px 12px;
                 background:var(--primary-light);border-radius:8px;margin-bottom:8px;">
-                📍 ${sede}
+                ${sede}
             </div>
             ${nombres.map((n, i) => `
                 <div style="display:flex;align-items:center;justify-content:space-between;
                     padding:9px 12px;background:var(--gray-50);border:1px solid var(--gray-200);
                     border-radius:8px;margin-bottom:6px;">
-                    <span style="font-weight:600;color:var(--gray-700);">👷 ${n}</span>
+                    <span style="font-weight:600;color:var(--gray-700);">${n}</span>
                     <button onclick="eliminarInspectorSede('${sede.replace(/'/g,"\\'")}',${i})"
                         style="background:#fef2f2;color:var(--danger);border:1px solid var(--danger);
                         border-radius:6px;padding:4px 10px;cursor:pointer;font-size:13px;font-weight:600;">
@@ -3220,11 +3220,11 @@ async function cargarReportesSupervisor() {
             aplicarFiltros();
         } catch(renderErr) {
             console.error('Error en renderizado:', renderErr);
-            lista.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>Error al mostrar reportes.<br><small>${renderErr.message}</small></p></div>`;
+            lista.innerHTML = `<div class="empty-state"><div class="empty-icon"></div><p>Error al mostrar reportes.<br><small>${renderErr.message}</small></p></div>`;
         }
 
     } catch(err) {
-        lista.innerHTML = `<div class="empty-state"><div class="empty-icon">⚠️</div><p>No se pudo conectar al servidor.<br><small>${err.message}</small></p></div>`;
+        lista.innerHTML = `<div class="empty-state"><div class="empty-icon"></div><p>No se pudo conectar al servidor.<br><small>${err.message}</small></p></div>`;
         contador.textContent = '';
     }
 }
@@ -3300,7 +3300,7 @@ function renderDashboard(reportes) {
     contador.textContent = `${reportes.length} reporte${reportes.length !== 1 ? 's' : ''} encontrado${reportes.length !== 1 ? 's' : ''}`;
 
     if (reportes.length === 0) {
-        lista.innerHTML = `<div class="empty-state"><div class="empty-icon">📂</div><p>No hay reportes que coincidan</p></div>`;
+        lista.innerHTML = `<div class="empty-state"><div class="empty-icon"></div><p>No hay reportes que coincidan</p></div>`;
         return;
     }
 
@@ -3316,7 +3316,7 @@ function renderDashboard(reportes) {
         const campos = buildCamposReporte(r);
         const fotos  = buildFotosReporte(r);
         const pdf    = r['PDF']
-            ? `<a href="${r['PDF']}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:10px 18px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;box-shadow:0 2px 8px rgba(37,99,235,0.3);">📥 Ver PDF</a>`
+            ? `<a href="${r['PDF']}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;padding:10px 18px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:white;border-radius:8px;font-weight:700;font-size:13px;text-decoration:none;box-shadow:0 2px 8px rgba(37,99,235,0.3);">Ver PDF</a>`
             : '';
 
         return `
@@ -3326,7 +3326,7 @@ function renderDashboard(reportes) {
                     <div class="reporte-card-header-top">
                         <span class="reporte-badge ${badgeClass}">${modulo}</span>
                     </div>
-                    <div class="reporte-card-header-sub">👷 ${inspector} · 📅 ${fecha || fechaReg}</div>
+                    <div class="reporte-card-header-sub">${inspector} · ${fecha || fechaReg}</div>
                 </div>
                 <span class="reporte-arrow" id="arrow_r${id}">▼</span>
             </div>
@@ -3334,8 +3334,8 @@ function renderDashboard(reportes) {
                 <div class="reporte-campos-grid">${campos}</div>
                 ${fotos}
                 ${pdf}
-                ${fechaReg ? `<div style="margin-top:10px;font-size:11px;color:var(--gray-400);">🕐 Registrado: ${fechaReg}</div>` : ''}
-                <button onclick="eliminarReporte(${idx})" style="margin-top:12px;padding:8px 16px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:13px;cursor:pointer;">🗑️ Eliminar reporte</button>
+                ${fechaReg ? `<div style="margin-top:10px;font-size:11px;color:var(--gray-400);">Registrado: ${fechaReg}</div>` : ''}
+                <button onclick="eliminarReporte(${idx})" style="margin-top:12px;padding:8px 16px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;"><i data-lucide="trash-2" style="width:15px;height:15px;stroke:white;fill:none;stroke-width:2;"></i> Eliminar reporte</button>
             </div>
         </div>`;
         } catch(e) { return `<div class="reporte-card"><p style="padding:12px;color:red;">Error en reporte ${idx}: ${e.message}</p></div>`; }
@@ -3373,7 +3373,7 @@ function buildCamposReporte(r) {
         .map(([k, label]) => {
             const v = r[k];
             const display = k === 'Google Maps' && v
-                ? `<a href="${v}" target="_blank" style="color:var(--primary);font-weight:600;">📍 Ver en mapa</a>`
+                ? `<a href="${v}" target="_blank" style="color:var(--primary);font-weight:600;">Ver en mapa</a>`
                 : v;
             const fullClass = CAMPOS_FULL.includes(k) ? ' reporte-campo-full' : '';
             return `<div class="reporte-campo${fullClass}"><strong>${label}</strong><span>${display}</span></div>`;
@@ -3397,13 +3397,13 @@ function buildFotosReporte(r) {
 
     return `
     <div style="margin-top:14px;">
-        <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">📷 Fotografías</div>
+        <div style="font-size:11px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">Fotografías</div>
         <div class="reporte-fotos">
             ${fotos.map((url, i) => {
                 const thumb = toThumb(url);
                 return `<div class="reporte-foto-item" onclick="verFotoGrande('${thumb}')">
                     <img src="${thumb}" alt="Foto ${i+1}" onerror="this.parentElement.innerHTML='<span style=font-size:11px;color:#999>Sin vista previa</span>'">
-                    <div class="reporte-foto-overlay">🔍</div>
+                    <div class="reporte-foto-overlay"><i data-lucide="zoom-in" style="width:16px;height:16px;stroke:white;fill:none;stroke-width:2;"></i></div>
                 </div>`;
             }).join('')}
         </div>
