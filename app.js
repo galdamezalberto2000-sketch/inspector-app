@@ -2465,7 +2465,7 @@ function mostrarTabMoto(tab) {
 
 // Captura de fotos moto y galería — ya integrados directamente en capturePhoto y openGallery arriba
 
-// Event listeners galería moto
+// Event listeners galería moto — registrados con setTimeout para asegurar que el DOM esté listo
 const _galeriasMotoRegistradas = new Set();
 function registrarGaleriasMoto() {
     const configs = [

@@ -568,18 +568,18 @@
                             <div class="photo-preview" id="viajeKmFinalTardePreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
                                 <button type="button" class="btn-photo btn-icon" onclick="openCamera('viajeKmFinalTarde')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                <label for="viajeKmFinalTardeGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                <label for="viajeKmFinalTardeGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                             </div>
-                            <input type="file" id="viajeKmFinalTardeGallery" accept="image/*" style="display:none;">
+                            <input type="file" id="viajeKmFinalTardeGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                         </div>
                         <div class="form-group">
                             <label>Foto del Tablero Final</label>
                             <div class="photo-preview" id="viajeTableroTardePreview"><p>No hay foto</p></div>
                             <div class="photo-buttons">
                                 <button type="button" class="btn-photo btn-icon" onclick="openCamera('viajeTableroTarde')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                <label for="viajeTableroTardeGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                <label for="viajeTableroTardeGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                             </div>
-                            <input type="file" id="viajeTableroTardeGallery" accept="image/*" style="display:none;">
+                            <input type="file" id="viajeTableroTardeGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                         </div>
                         <div style="display:flex;gap:8px;margin-top:8px;">
                             <button type="button" class="btn-save btn-icon" onclick="completarViaje()" style="flex:1;"><span class="icon"><i data-lucide="save"></i></span> Guardar Km Final</button>
@@ -626,9 +626,9 @@
                                 <div class="photo-preview" id="viajeKmInicialPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('viajeKmInicial')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="viajeKmInicialGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="viajeKmInicialGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="viajeKmInicialGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="viajeKmInicialGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <button type="button" class="btn-save btn-icon" onclick="guardarKmInicial()"><span class="icon"><i data-lucide="save"></i></span> Guardar Km Inicial</button>
                         </form>
@@ -671,63 +671,63 @@
                                 <div class="photo-preview" id="inspeccionMotoPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionMoto')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="inspeccionMotoGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="inspeccionMotoGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="inspeccionMotoGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="inspeccionMotoGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <div class="form-group">
                                 <label>Foto Retrovisores</label>
                                 <div class="photo-preview" id="inspeccionRetroPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionRetro')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="inspeccionRetroGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="inspeccionRetroGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="inspeccionRetroGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="inspeccionRetroGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <div class="form-group">
                                 <label>Foto Llantas</label>
                                 <div class="photo-preview" id="inspeccionLlantasPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionLlantas')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="inspeccionLlantasGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="inspeccionLlantasGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="inspeccionLlantasGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="inspeccionLlantasGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <div class="form-group">
                                 <label>Luces Delanteras (bajas)</label>
                                 <div class="photo-preview" id="inspeccionLucesDBPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionLucesDB')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="inspeccionLucesDBGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="inspeccionLucesDBGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="inspeccionLucesDBGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="inspeccionLucesDBGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <div class="form-group">
                                 <label>Luces Delanteras (altas)</label>
                                 <div class="photo-preview" id="inspeccionLucesDAPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionLucesDA')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="inspeccionLucesDAGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="inspeccionLucesDAGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="inspeccionLucesDAGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="inspeccionLucesDAGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <div class="form-group">
                                 <label>Luces Traseras (freno)</label>
                                 <div class="photo-preview" id="inspeccionLucesTFPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionLucesTF')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="inspeccionLucesTFGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="inspeccionLucesTFGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="inspeccionLucesTFGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="inspeccionLucesTFGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <div class="form-group">
                                 <label>Luces Traseras (posición)</label>
                                 <div class="photo-preview" id="inspeccionLucesTPPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('inspeccionLucesTP')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="inspeccionLucesTPGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="inspeccionLucesTPGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="inspeccionLucesTPGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="inspeccionLucesTPGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <div class="form-group">
                                 <label for="inspeccionObservaciones">Observaciones</label>
@@ -791,9 +791,9 @@
                                 <div class="photo-preview" id="gastosFacturaPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('gastosFactura')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="gastosFacturaGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="gastosFacturaGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="gastosFacturaGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="gastosFacturaGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <button type="button" class="btn-save btn-icon" onclick="enviarGastoMoto()"><span class="icon"><i data-lucide="send"></i></span> Enviar Gasto</button>
                         </form>
@@ -836,27 +836,27 @@
                                 <div class="photo-preview" id="cascoCascoPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('cascoCasco')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="cascoCascoGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="cascoCascoGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="cascoCascoGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="cascoCascoGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <div class="form-group">
                                 <label>Foto Visera Levantada</label>
                                 <div class="photo-preview" id="cascoViseraPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('cascoVisera')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="cascoViseraGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="cascoViseraGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="cascoViseraGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="cascoViseraGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <div class="form-group">
                                 <label>Foto Seguro del Casco Puesto</label>
                                 <div class="photo-preview" id="cascoSeguroPreview"><p>No hay foto</p></div>
                                 <div class="photo-buttons">
                                     <button type="button" class="btn-photo btn-icon" onclick="openCamera('cascoSeguro')"><span class="icon"><i data-lucide="camera"></i></span> Tomar Foto</button>
-                                    <label for="cascoSeguroGallery2" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
+                                    <label for="cascoSeguroGallery" class="btn-photo btn-icon" style="cursor:pointer;"><span class="icon"><i data-lucide="image"></i></span> Galería</label>
                                 </div>
-                                <input type="file" id="cascoSeguroGallery" accept="image/*" style="display:none;">
+                                <input type="file" id="cascoSeguroGallery" accept="image/*" style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
                             </div>
                             <div class="form-group">
                                 <label for="cascoObservaciones">Observaciones</label>
