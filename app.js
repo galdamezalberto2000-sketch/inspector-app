@@ -167,6 +167,15 @@ function getReportes() {
     return JSON.parse(localStorage.getItem(REPORTES_KEY)) || [];
 }
 
+// Convierte URL de Drive a thumbnail visualizable
+function toThumbUrl(url) {
+    if (!url) return '';
+    if (url.startsWith('data:image')) return url; // ya es base64
+    const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (m) return `https://drive.google.com/thumbnail?id=${m[1]}&sz=w600`;
+    return url;
+}
+
 // Limpiar localStorage si está muy lleno
 (function limpiarStorage() {
     try {
@@ -3952,7 +3961,7 @@ async function verHistorialDotacion() {
                     <p style="font-size:12px;color:var(--gray-500);margin-bottom:8px;">${r.Sede||''}</p>
                     ${items}
                     ${r.Observaciones ? `<p style="font-size:12px;color:#f59e0b;margin-top:8px;">${r.Observaciones}</p>` : ''}
-                    ${r.Foto_URL && r.Foto_URL !== '' ? `<img src="${r.Foto_URL}" style="max-width:100%;border-radius:8px;max-height:200px;margin-top:8px;" onerror="this.style.display='none'">` : ''}
+                    ${r.Foto_URL && r.Foto_URL !== '' ? `<img src="${toThumbUrl(r.Foto_URL)}" style="max-width:100%;border-radius:8px;max-height:200px;margin-top:8px;" onerror="this.style.display='none'">` : ''}
                 </div>
             </div>`;
         }).join('');
@@ -4118,8 +4127,8 @@ async function verHistorialCharla() {
             histDiv.innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:16px;">No hay charlas registradas.</p>';
             return;
         }
-        // Mapear campos del GAS al formato local
-        const mapeadas = charlas.map(c => ({ sede: c.Sede, fecha: c.Fecha, hora: c.Hora, tema: c.Tema, lat: c.Latitud, lng: c.Longitud, foto1: null, foto2: null }));
+        // Mapear campos del GAS al formato local, usando URLs de Drive para fotos
+        const mapeadas = charlas.map(c => ({ sede: c.Sede, fecha: c.Fecha, hora: c.Hora, tema: c.Tema, lat: c.Latitud, lng: c.Longitud, foto1: toThumbUrl(c.Foto1), foto2: toThumbUrl(c.Foto2) }));
         renderHistorialCharlaLocal(mapeadas, histDiv);
     } catch(err) {
         histDiv.innerHTML = `<p style="color:#ef4444;text-align:center;padding:16px;">Error: ${err.message}</p>`;
