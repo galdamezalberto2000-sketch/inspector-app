@@ -943,6 +943,11 @@
 
                     <div id="supervisorContador" style="font-size:13px;color:var(--gray-500);margin-bottom:8px;"></div>
                     <div id="supervisorLista"></div>
+                    <div id="btnEliminarModulo" style="display:none;margin-top:12px;">
+                        <button onclick="eliminarModuloSheets()" style="width:100%;padding:12px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">
+                            Eliminar todos los reportes del módulo seleccionado de Sheets
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Tab Asistencia -->
@@ -960,6 +965,9 @@
                     </div>
                     <div id="asistenciaLista"></div>
                     <div id="historialAsistencia" style="display:none;margin-top:16px;"></div>
+                    <button onclick="eliminarHojaSheets('Asistencia')" style="width:100%;margin-top:12px;padding:12px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">
+                        Eliminar todos los registros de Asistencia
+                    </button>
                 </div>
 
                 <!-- Tab Dotación -->
@@ -982,6 +990,9 @@
                     </div>
                     <div id="dotacionForm"></div>
                     <div id="historialDotacion" style="display:none;margin-top:16px;"></div>
+                    <button onclick="eliminarHojaSheets('Dotacion')" style="width:100%;margin-top:12px;padding:12px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">
+                        Eliminar todos los registros de Dotación
+                    </button>
                 </div>
 
                 <!-- Tab Charla Preoperativa -->
@@ -1058,6 +1069,9 @@
                         </div>
                     </div>
                     <div id="historialCharla" style="display:none;margin-top:16px;"></div>
+                    <button onclick="eliminarHojaSheets('Charlas')" style="width:100%;margin-top:12px;padding:12px;background:#ef4444;color:white;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">
+                        Eliminar todos los registros de Charlas
+                    </button>
                 </div>
 
             </div>

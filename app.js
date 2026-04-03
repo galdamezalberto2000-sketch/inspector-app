@@ -3336,6 +3336,10 @@ function aplicarFiltros() {
     const fecha     = document.getElementById('filtroFecha').value;
     const texto     = '';
 
+    // Mostrar/ocultar botón eliminar módulo
+    const btnEliminar = document.getElementById('btnEliminarModulo');
+    if (btnEliminar) btnEliminar.style.display = modulo ? 'block' : 'none';
+
     let filtrados = _todosLosReportes.filter(r => {
         const mod  = (r['Módulo'] || r['Modulo'] || '').toLowerCase();
         const insp = (r['Inspector'] || r['Usuario'] || '').toLowerCase();
@@ -4154,4 +4158,53 @@ function renderHistorialCharlaLocal(charlas, histDiv) {
                 </div>
             </div>
         </div>`).join('');
+}
+
+// ==================== ELIMINAR SHEETS ====================
+
+async function eliminarHojaSheets(nombreHoja) {
+    if (!confirm(`¿Eliminar TODOS los registros de ${nombreHoja} de Google Sheets? Esta acción no se puede deshacer.`)) return;
+    try {
+        const res = await fetch(GAS_URL_FIJA, {
+            method: 'POST', redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ accion: 'eliminarHoja', nombreHoja })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert(`Registros de ${nombreHoja} eliminados correctamente.`);
+            // Limpiar localStorage también
+            if (nombreHoja === 'Asistencia') localStorage.removeItem(ASISTENCIA_KEY);
+            if (nombreHoja === 'Dotacion')   localStorage.removeItem(DOTACION_KEY);
+            if (nombreHoja === 'Charlas')    localStorage.removeItem(CHARLA_KEY);
+        } else {
+            alert('Error: ' + (data.error || 'No se pudo eliminar'));
+        }
+    } catch(err) {
+        alert('Error de conexión: ' + err.message);
+    }
+}
+
+async function eliminarModuloSheets() {
+    const modulo = document.getElementById('filtroModulo').value;
+    if (!modulo) { alert('Selecciona un módulo primero en el filtro'); return; }
+    if (!confirm(`¿Eliminar TODOS los reportes del módulo "${modulo}" de Google Sheets?`)) return;
+    try {
+        const res = await fetch(GAS_URL_FIJA, {
+            method: 'POST', redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ accion: 'eliminarPorModulo', modulo })
+        });
+        const data = await res.json();
+        if (data.success) {
+            alert(`Reportes del módulo "${modulo}" eliminados.`);
+            _todosLosReportes = _todosLosReportes.filter(r => !(r['Módulo']||'').toLowerCase().includes(modulo.toLowerCase()));
+            aplicarFiltros();
+            actualizarStats(_todosLosReportes);
+        } else {
+            alert('Error: ' + (data.error || 'No se pudo eliminar'));
+        }
+    } catch(err) {
+        alert('Error de conexión: ' + err.message);
+    }
 }
