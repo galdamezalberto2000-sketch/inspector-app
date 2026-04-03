@@ -885,48 +885,77 @@
             </div>
             <div class="content">
 
-                <!-- Stats compactos -->
-                <div style="display:flex;gap:8px;margin-bottom:12px;font-size:13px;color:var(--gray-500);">
-                    <span>Total: <strong id="statTotal" style="color:var(--primary);">—</strong></span>
-                    <span>·</span>
-                    <span>Hoy: <strong id="statHoy" style="color:#22c55e;">—</strong></span>
-                    <span>·</span>
-                    <span>Inspectores: <strong id="statInspectores" style="color:#a78bfa;">—</strong></span>
+                <!-- Tabs supervisor -->
+                <div style="display:flex;gap:8px;margin-bottom:16px;">
+                    <button class="moto-tab btn-icon active" onclick="mostrarTabSupervisor('reportes')" id="tabSupReportes">
+                        <span class="icon"><i data-lucide="file-text"></i></span> Reportes
+                    </button>
+                    <button class="moto-tab btn-icon" onclick="mostrarTabSupervisor('asistencia')" id="tabSupAsistencia">
+                        <span class="icon"><i data-lucide="clipboard-check"></i></span> Asistencia
+                    </button>
                 </div>
 
-                <!-- Selector de módulo -->
-                <div class="form-card" style="padding:14px;margin-bottom:12px;">
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                        <select id="filtroModulo" onchange="aplicarFiltros()" style="flex:1;min-width:0;padding:10px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:14px;">
-                            <option value="">Todos los módulos</option>
-                            <option value="Medidor">Medidores</option>
-                            <option value="Error">Errores en campo</option>
-                            <option value="Consumo">Bajo consumo</option>
-                            <option value="Reubicacion">Reubicación</option>
-                            <option value="Postes">Postes derribados</option>
-                            <option value="Inspector">Informe inspector</option>
-                            <option value="Factura">Facturas</option>
-                            <option value="MotoViaje">Moto - Viaje</option>
-                            <option value="MotoInspeccion">Moto - Inspección</option>
-                            <option value="MotoGastos">Moto - Gastos</option>
-                            <option value="MotoCasco">Moto - Casco</option>
-                        </select>
-                        <select id="filtroInspector" onchange="aplicarFiltros()" style="flex:1;min-width:0;padding:10px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:14px;">
-                            <option value="">Todos los inspectores</option>
-                        </select>
+                <!-- Tab Reportes -->
+                <div id="supTabReportes">
+                    <!-- Stats compactos -->
+                    <div style="display:flex;gap:8px;margin-bottom:12px;font-size:13px;color:var(--gray-500);">
+                        <span>Total: <strong id="statTotal" style="color:var(--primary);">—</strong></span>
+                        <span>·</span>
+                        <span>Hoy: <strong id="statHoy" style="color:#22c55e;">—</strong></span>
+                        <span>·</span>
+                        <span>Inspectores: <strong id="statInspectores" style="color:#a78bfa;">—</strong></span>
                     </div>
-                    <div style="display:flex;gap:8px;margin-top:8px;">
-                        <input type="date" id="filtroFecha" onchange="aplicarFiltros()" style="flex:1;padding:10px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:14px;">
-                        <button onclick="cargarReportesSupervisor()" class="btn-secondary btn-icon" style="white-space:nowrap;">
-                            <span class="icon"><i data-lucide="refresh-cw"></i></span> Actualizar
-                        </button>
+
+                    <!-- Filtros -->
+                    <div class="form-card" style="padding:14px;margin-bottom:12px;">
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                            <select id="filtroModulo" onchange="aplicarFiltros()" style="flex:1;min-width:0;padding:10px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:14px;">
+                                <option value="">Todos los módulos</option>
+                                <option value="Medidor">Medidores</option>
+                                <option value="Error">Errores en campo</option>
+                                <option value="Consumo">Bajo consumo</option>
+                                <option value="Reubicacion">Reubicación</option>
+                                <option value="Postes">Postes derribados</option>
+                                <option value="Inspector">Informe inspector</option>
+                                <option value="Factura">Facturas</option>
+                                <option value="MotoViaje">Moto - Viaje</option>
+                                <option value="MotoInspeccion">Moto - Inspección</option>
+                                <option value="MotoGastos">Moto - Gastos</option>
+                                <option value="MotoCasco">Moto - Casco</option>
+                            </select>
+                            <select id="filtroInspector" onchange="aplicarFiltros()" style="flex:1;min-width:0;padding:10px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:14px;">
+                                <option value="">Todos los inspectores</option>
+                            </select>
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:8px;">
+                            <input type="date" id="filtroFecha" onchange="aplicarFiltros()" style="flex:1;padding:10px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:14px;">
+                            <button onclick="cargarReportesSupervisor()" class="btn-secondary btn-icon" style="white-space:nowrap;">
+                                <span class="icon"><i data-lucide="refresh-cw"></i></span> Actualizar
+                            </button>
+                        </div>
                     </div>
+
+                    <div id="supervisorContador" style="font-size:13px;color:var(--gray-500);margin-bottom:8px;"></div>
+                    <div id="supervisorLista"></div>
                 </div>
 
-                <!-- Contador -->
-                <div id="supervisorContador" style="font-size:13px;color:var(--gray-500);margin-bottom:8px;"></div>
-                <!-- Lista reportes -->
-                <div id="supervisorLista"></div>
+                <!-- Tab Asistencia -->
+                <div id="supTabAsistencia" style="display:none;">
+                    <div class="form-card" style="padding:14px;margin-bottom:12px;">
+                        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                            <input type="date" id="asistenciaFecha" style="flex:1;padding:10px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:14px;">
+                            <button onclick="verHistorialAsistencia()" class="btn-secondary btn-icon" style="white-space:nowrap;">
+                                <span class="icon"><i data-lucide="history"></i></span> Ver historial
+                            </button>
+                            <button onclick="guardarAsistencia()" class="btn-save btn-icon" style="width:auto;padding:10px 16px;white-space:nowrap;">
+                                <span class="icon"><i data-lucide="save"></i></span> Guardar
+                            </button>
+                        </div>
+                    </div>
+                    <div id="asistenciaLista"></div>
+                    <div id="historialAsistencia" style="display:none;margin-top:16px;"></div>
+                </div>
+
             </div>
         </div>
 

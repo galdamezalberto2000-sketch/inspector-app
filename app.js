@@ -3519,3 +3519,151 @@ function verFotoGrande(src) {
     modal.style.display = 'flex';
     modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
 }
+
+// ==================== ASISTENCIA ====================
+
+const ASISTENCIA_KEY = 'asistencia_inspectores';
+const RAZONES_AUSENCIA = ['Vacaciones', 'Incapacidad', 'No se presentó', 'Permiso autorizado', 'Reparto', 'Falla mecánica'];
+
+function mostrarTabSupervisor(tab) {
+    document.getElementById('supTabReportes').style.display  = tab === 'reportes'   ? 'block' : 'none';
+    document.getElementById('supTabAsistencia').style.display = tab === 'asistencia' ? 'block' : 'none';
+    document.getElementById('tabSupReportes').classList.toggle('active',   tab === 'reportes');
+    document.getElementById('tabSupAsistencia').classList.toggle('active', tab === 'asistencia');
+    if (tab === 'asistencia') renderAsistencia();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function getInspectoresTodos() {
+    const subsedes = getSubsedes();
+    const lista = [];
+    Object.entries(subsedes).forEach(([sede, nombres]) => {
+        nombres.forEach(n => lista.push({ nombre: n, sede }));
+    });
+    return lista;
+}
+
+function renderAsistencia() {
+    const fecha = document.getElementById('asistenciaFecha').value || new Date().toISOString().split('T')[0];
+    document.getElementById('asistenciaFecha').value = fecha;
+    document.getElementById('historialAsistencia').style.display = 'none';
+
+    const guardado = JSON.parse(localStorage.getItem(ASISTENCIA_KEY) || '{}');
+    const diaActual = guardado[fecha] || {};
+    const inspectores = getInspectoresTodos();
+
+    document.getElementById('asistenciaLista').innerHTML = inspectores.map(({ nombre, sede }) => {
+        const estado = diaActual[nombre] || { presente: null, razon: '' };
+        const presente = estado.presente;
+        return `
+        <div style="background:#0d1424;border:1px solid #1a2e50;border-radius:10px;padding:14px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <div>
+                    <div style="font-weight:600;color:var(--gray-800);font-size:14px;">${nombre}</div>
+                    <div style="font-size:11px;color:var(--gray-500);">${sede}</div>
+                </div>
+                <div style="display:flex;gap:6px;">
+                    <button onclick="setAsistencia('${nombre}', true, '${fecha}')"
+                        style="padding:7px 14px;border-radius:8px;border:2px solid ${presente === true ? '#22c55e' : '#1a2e50'};
+                        background:${presente === true ? '#052e16' : '#0a1628'};color:${presente === true ? '#22c55e' : 'var(--gray-500)'};
+                        font-weight:600;font-size:13px;cursor:pointer;">
+                        Si
+                    </button>
+                    <button onclick="setAsistencia('${nombre}', false, '${fecha}')"
+                        style="padding:7px 14px;border-radius:8px;border:2px solid ${presente === false ? '#ef4444' : '#1a2e50'};
+                        background:${presente === false ? '#2d0a0a' : '#0a1628'};color:${presente === false ? '#ef4444' : 'var(--gray-500)'};
+                        font-weight:600;font-size:13px;cursor:pointer;">
+                        No
+                    </button>
+                </div>
+            </div>
+            ${presente === false ? `
+            <select onchange="setRazon('${nombre}', this.value, '${fecha}')"
+                style="width:100%;padding:8px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:13px;">
+                <option value="">-- Motivo de ausencia --</option>
+                ${RAZONES_AUSENCIA.map(r => `<option value="${r}" ${estado.razon === r ? 'selected' : ''}>${r}</option>`).join('')}
+            </select>` : ''}
+        </div>`;
+    }).join('');
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function setAsistencia(nombre, presente, fecha) {
+    const guardado = JSON.parse(localStorage.getItem(ASISTENCIA_KEY) || '{}');
+    if (!guardado[fecha]) guardado[fecha] = {};
+    guardado[fecha][nombre] = { presente, razon: presente ? '' : (guardado[fecha][nombre]?.razon || '') };
+    localStorage.setItem(ASISTENCIA_KEY, JSON.stringify(guardado));
+    renderAsistencia();
+}
+
+function setRazon(nombre, razon, fecha) {
+    const guardado = JSON.parse(localStorage.getItem(ASISTENCIA_KEY) || '{}');
+    if (!guardado[fecha]) guardado[fecha] = {};
+    if (!guardado[fecha][nombre]) guardado[fecha][nombre] = { presente: false, razon: '' };
+    guardado[fecha][nombre].razon = razon;
+    localStorage.setItem(ASISTENCIA_KEY, JSON.stringify(guardado));
+}
+
+function guardarAsistencia() {
+    const fecha = document.getElementById('asistenciaFecha').value;
+    const guardado = JSON.parse(localStorage.getItem(ASISTENCIA_KEY) || '{}');
+    const diaActual = guardado[fecha] || {};
+    const inspectores = getInspectoresTodos();
+    const sinMarcar = inspectores.filter(({ nombre }) => diaActual[nombre]?.presente === undefined || diaActual[nombre]?.presente === null);
+    if (sinMarcar.length > 0) {
+        if (!confirm(`Faltan ${sinMarcar.length} inspector(es) sin marcar. ¿Guardar de todas formas?`)) return;
+    }
+    alert(`Asistencia del ${fecha} guardada correctamente.`);
+}
+
+function verHistorialAsistencia() {
+    const guardado = JSON.parse(localStorage.getItem(ASISTENCIA_KEY) || '{}');
+    const fechas = Object.keys(guardado).sort().reverse();
+    const histDiv = document.getElementById('historialAsistencia');
+
+    if (fechas.length === 0) {
+        histDiv.innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:16px;">No hay registros de asistencia.</p>';
+        histDiv.style.display = 'block';
+        return;
+    }
+
+    histDiv.innerHTML = fechas.map(fecha => {
+        const dia = guardado[fecha];
+        const presentes = Object.values(dia).filter(v => v.presente === true).length;
+        const ausentes  = Object.values(dia).filter(v => v.presente === false).length;
+        const total = Object.keys(dia).length;
+        return `
+        <div style="background:#0d1424;border:1px solid #1a2e50;border-radius:10px;padding:12px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleHistorialDia('hdia_${fecha}')">
+                <strong style="color:var(--gray-800);">${fecha}</strong>
+                <span style="font-size:12px;color:var(--gray-500);">
+                    <span style="color:#22c55e;">${presentes} presentes</span> · 
+                    <span style="color:#ef4444;">${ausentes} ausentes</span> · 
+                    ${total} marcados
+                </span>
+            </div>
+            <div id="hdia_${fecha}" style="display:none;margin-top:10px;">
+                ${Object.entries(dia).map(([nombre, est]) => `
+                <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a2e50;font-size:13px;">
+                    <span style="color:var(--gray-700);">${nombre}</span>
+                    <span style="color:${est.presente ? '#22c55e' : '#ef4444'};font-weight:600;">
+                        ${est.presente ? 'Presente' : (est.razon || 'Ausente')}
+                    </span>
+                </div>`).join('')}
+            </div>
+        </div>`;
+    }).join('');
+    histDiv.style.display = 'block';
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function toggleHistorialDia(id) {
+    const el = document.getElementById(id);
+    if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+// Inicializar fecha de asistencia al abrir supervisor
+document.addEventListener('DOMContentLoaded', () => {
+    const fa = document.getElementById('asistenciaFecha');
+    if (fa) fa.value = new Date().toISOString().split('T')[0];
+});
