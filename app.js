@@ -130,22 +130,56 @@ function comprimirImagen(base64, maxWidth, quality) {
 const REPORTES_KEY = 'reportes_app';
 
 function guardarReporte(modulo, datos) {
-    const reportes = JSON.parse(localStorage.getItem(REPORTES_KEY)) || [];
-    reportes.unshift({
-        id: Date.now(),
-        modulo,
-        fechaRegistro: new Date().toLocaleString('es-ES'),
-        usuario: localStorage.getItem('currentUser') || '',
-        ...datos
-    });
-    // Limitar a 500 reportes para no saturar localStorage
-    if (reportes.length > 500) reportes.splice(500);
-    localStorage.setItem(REPORTES_KEY, JSON.stringify(reportes));
+    try {
+        const reportes = JSON.parse(localStorage.getItem(REPORTES_KEY)) || [];
+        // Excluir fotos del localStorage para no saturarlo
+        const datosSinFotos = {};
+        for (const [k, v] of Object.entries(datos)) {
+            if (typeof v === 'string' && v.startsWith('data:image')) continue;
+            if (typeof v === 'object' && v !== null) {
+                // Para objetos como fotos de inspección, guardar solo metadatos
+                const objSinFotos = {};
+                for (const [k2, v2] of Object.entries(v)) {
+                    if (typeof v2 !== 'string' || !v2.startsWith('data:image')) {
+                        objSinFotos[k2] = v2;
+                    }
+                }
+                datosSinFotos[k] = objSinFotos;
+            } else {
+                datosSinFotos[k] = v;
+            }
+        }
+        reportes.unshift({
+            id: Date.now(),
+            modulo,
+            fechaRegistro: new Date().toLocaleString('es-ES'),
+            usuario: localStorage.getItem('currentUser') || '',
+            ...datosSinFotos
+        });
+        if (reportes.length > 200) reportes.splice(200);
+        localStorage.setItem(REPORTES_KEY, JSON.stringify(reportes));
+    } catch(e) {
+        console.warn('No se pudo guardar en localStorage:', e.message);
+    }
 }
 
 function getReportes() {
     return JSON.parse(localStorage.getItem(REPORTES_KEY)) || [];
 }
+
+// Limpiar localStorage si está muy lleno
+(function limpiarStorage() {
+    try {
+        const reportes = JSON.parse(localStorage.getItem(REPORTES_KEY)) || [];
+        if (reportes.length > 100) {
+            // Mantener solo los últimos 50
+            localStorage.setItem(REPORTES_KEY, JSON.stringify(reportes.slice(0, 50)));
+        }
+    } catch(e) {
+        // Si hay error, limpiar todo el key de reportes
+        try { localStorage.removeItem(REPORTES_KEY); } catch(e2) {}
+    }
+})();
 
 
 const loginScreen = document.getElementById('loginScreen');
