@@ -886,12 +886,15 @@
             <div class="content">
 
                 <!-- Tabs supervisor -->
-                <div style="display:flex;gap:8px;margin-bottom:16px;">
+                <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
                     <button class="moto-tab btn-icon active" onclick="mostrarTabSupervisor('reportes')" id="tabSupReportes">
                         <span class="icon"><i data-lucide="file-text"></i></span> Reportes
                     </button>
                     <button class="moto-tab btn-icon" onclick="mostrarTabSupervisor('asistencia')" id="tabSupAsistencia">
                         <span class="icon"><i data-lucide="clipboard-check"></i></span> Asistencia
+                    </button>
+                    <button class="moto-tab btn-icon" onclick="mostrarTabSupervisor('dotacion')" id="tabSupDotacion">
+                        <span class="icon"><i data-lucide="shield-check"></i></span> Dotación
                     </button>
                 </div>
 
@@ -954,6 +957,28 @@
                     </div>
                     <div id="asistenciaLista"></div>
                     <div id="historialAsistencia" style="display:none;margin-top:16px;"></div>
+                </div>
+
+                <!-- Tab Dotación -->
+                <div id="supTabDotacion" style="display:none;">
+                    <div class="form-card" style="padding:14px;margin-bottom:12px;">
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                            <select id="dotacionInspector" style="flex:1;padding:10px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:14px;" onchange="renderDotacion()">
+                                <option value="">-- Seleccionar inspector --</option>
+                            </select>
+                            <input type="date" id="dotacionFecha" style="flex:1;padding:10px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:14px;">
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:8px;">
+                            <button onclick="verHistorialDotacion()" class="btn-secondary btn-icon" style="flex:1;">
+                                <span class="icon"><i data-lucide="history"></i></span> Historial
+                            </button>
+                            <button onclick="guardarDotacion()" class="btn-save btn-icon" style="flex:1;">
+                                <span class="icon"><i data-lucide="save"></i></span> Guardar
+                            </button>
+                        </div>
+                    </div>
+                    <div id="dotacionForm"></div>
+                    <div id="historialDotacion" style="display:none;margin-top:16px;"></div>
                 </div>
 
             </div>
@@ -1031,6 +1056,7 @@
     <input type="file" id="cascoCascoGallery2"        accept="image/*" style="position:absolute;opacity:0;width:0;height:0;">
     <input type="file" id="cascoViseraGallery2"       accept="image/*" style="position:absolute;opacity:0;width:0;height:0;">
     <input type="file" id="cascoSeguroGallery2"       accept="image/*" style="position:absolute;opacity:0;width:0;height:0;">
+    <input type="file" id="dotacionFotoGallery2"      accept="image/*" style="position:absolute;opacity:0;width:0;height:0;">
     <input type="file" id="viajeKmInicialGallery2"    accept="image/*" style="position:absolute;opacity:0;width:0;height:0;">
     <input type="file" id="viajeKmFinalTardeGallery2" accept="image/*" style="position:absolute;opacity:0;width:0;height:0;">
     <input type="file" id="viajeTableroTardeGallery2" accept="image/*" style="position:absolute;opacity:0;width:0;height:0;">

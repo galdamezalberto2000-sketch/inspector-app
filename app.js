@@ -560,6 +560,10 @@ function capturePhoto() {
     } else if (currentPhotoType === 'cascoSeguro') {
         cascoSeguroFoto = photoData;
         document.getElementById('cascoSeguroPreview').innerHTML = `<img src="${photoData}" alt="Seguro">`;
+    } else if (currentPhotoType === 'dotacionFoto') {
+        dotacionFotoData = photoData;
+        const prev = document.getElementById('dotacionFotoPreview');
+        if (prev) prev.innerHTML = `<img src="${photoData}" style="max-width:100%;border-radius:8px;max-height:200px;">`;
     }
     
     closeCamera();
@@ -3526,11 +3530,14 @@ const ASISTENCIA_KEY = 'asistencia_inspectores';
 const RAZONES_AUSENCIA = ['Vacaciones', 'Incapacidad', 'No se presentó', 'Permiso autorizado', 'Reparto', 'Falla mecánica'];
 
 function mostrarTabSupervisor(tab) {
-    document.getElementById('supTabReportes').style.display  = tab === 'reportes'   ? 'block' : 'none';
+    document.getElementById('supTabReportes').style.display   = tab === 'reportes'   ? 'block' : 'none';
     document.getElementById('supTabAsistencia').style.display = tab === 'asistencia' ? 'block' : 'none';
+    document.getElementById('supTabDotacion').style.display   = tab === 'dotacion'   ? 'block' : 'none';
     document.getElementById('tabSupReportes').classList.toggle('active',   tab === 'reportes');
     document.getElementById('tabSupAsistencia').classList.toggle('active', tab === 'asistencia');
+    document.getElementById('tabSupDotacion').classList.toggle('active',   tab === 'dotacion');
     if (tab === 'asistencia') renderAsistencia();
+    if (tab === 'dotacion') { poblarSelectDotacion(); renderDotacion(); }
     if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
@@ -3672,4 +3679,193 @@ function toggleHistorialDia(id) {
 document.addEventListener('DOMContentLoaded', () => {
     const fa = document.getElementById('asistenciaFecha');
     if (fa) fa.value = new Date().toISOString().split('T')[0];
+});
+
+// ==================== DOTACIÓN ====================
+
+const DOTACION_KEY = 'dotacion_inspectores';
+const DOTACION_ITEMS = [
+    { id: 'camisa',    label: 'Camisa / Chaleco' },
+    { id: 'sombrero',  label: 'Sombrero en buen estado' },
+    { id: 'burros',    label: 'Burros en buen estado' },
+    { id: 'pantalon',  label: 'Pantalón en buen estado' },
+    { id: 'termico',   label: 'Papel térmico' },
+    { id: 'carnet',    label: 'Carnet del seguro' },
+    { id: 'licencia',  label: 'Licencia en orden' },
+    { id: 'revision',  label: 'Revisión en orden' },
+    { id: 'volantes',  label: 'Volantes' },
+    { id: 'binocular', label: 'Binocular' },
+];
+
+// Poblar select de inspector en dotación
+function poblarSelectDotacion() {
+    const sel = document.getElementById('dotacionInspector');
+    if (!sel) return;
+    const inspectores = getInspectoresTodos();
+    sel.innerHTML = '<option value="">-- Seleccionar inspector --</option>' +
+        inspectores.map(({ nombre, sede }) =>
+            `<option value="${nombre}">${nombre} (${sede.replace('Sub-Sede ', '')})</option>`
+        ).join('');
+}
+
+let dotacionFotoData = null;
+
+function renderDotacion() {
+    const inspector = document.getElementById('dotacionInspector').value;
+    const fecha = document.getElementById('dotacionFecha').value || new Date().toISOString().split('T')[0];
+    document.getElementById('dotacionFecha').value = fecha;
+    document.getElementById('historialDotacion').style.display = 'none';
+
+    if (!inspector) {
+        document.getElementById('dotacionForm').innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:16px;">Selecciona un inspector para continuar.</p>';
+        return;
+    }
+
+    const guardado = JSON.parse(localStorage.getItem(DOTACION_KEY) || '{}');
+    const key = `${inspector}_${fecha}`;
+    const actual = guardado[key] || {};
+    dotacionFotoData = actual.foto || null;
+
+    document.getElementById('dotacionForm').innerHTML = `
+        <div style="background:#0d1424;border:1px solid #1a2e50;border-radius:10px;padding:14px;margin-bottom:8px;">
+            <div style="font-weight:700;color:var(--primary);margin-bottom:12px;font-size:15px;">${inspector}</div>
+            ${DOTACION_ITEMS.map(item => {
+                const val = actual[item.id];
+                return `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1a2e50;">
+                    <span style="color:var(--gray-700);font-size:14px;">${item.label}</span>
+                    <div style="display:flex;gap:6px;">
+                        <button onclick="setDotacionItem('${item.id}', true)"
+                            style="padding:6px 12px;border-radius:8px;border:2px solid ${val === true ? '#22c55e' : '#1a2e50'};
+                            background:${val === true ? '#052e16' : '#0a1628'};color:${val === true ? '#22c55e' : 'var(--gray-500)'};
+                            font-weight:600;font-size:12px;cursor:pointer;">Si</button>
+                        <button onclick="setDotacionItem('${item.id}', false)"
+                            style="padding:6px 12px;border-radius:8px;border:2px solid ${val === false ? '#ef4444' : '#1a2e50'};
+                            background:${val === false ? '#2d0a0a' : '#0a1628'};color:${val === false ? '#ef4444' : 'var(--gray-500)'};
+                            font-weight:600;font-size:12px;cursor:pointer;">No</button>
+                    </div>
+                </div>
+                ${val === false ? `
+                <textarea id="obs_${item.id}" placeholder="Motivo por el que no cuenta con ${item.label}..."
+                    style="width:100%;margin-top:6px;padding:8px;border:1px solid #1a2e50;border-radius:8px;background:#0a1628;color:var(--gray-800);font-size:13px;resize:vertical;"
+                    rows="2" onchange="setDotacionObs('${item.id}', this.value)">${actual[item.id + '_obs'] || ''}</textarea>` : ''}`;
+            }).join('')}
+
+            <div style="margin-top:14px;">
+                <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px;">Foto del inspector (opcional)</div>
+                <div id="dotacionFotoPreview" style="margin-bottom:8px;">
+                    ${dotacionFotoData ? `<img src="${dotacionFotoData}" style="max-width:100%;border-radius:8px;max-height:200px;">` : '<p style="color:var(--gray-500);font-size:13px;">Sin foto</p>'}
+                </div>
+                <div style="display:flex;gap:8px;">
+                    <button type="button" class="btn-photo btn-icon" onclick="openCamera('dotacionFoto')">
+                        <span class="icon"><i data-lucide="camera"></i></span> Tomar Foto
+                    </button>
+                    <label for="dotacionFotoGallery2" class="btn-photo btn-icon" style="cursor:pointer;">
+                        <span class="icon"><i data-lucide="image"></i></span> Galería
+                    </label>
+                </div>
+            </div>
+        </div>`;
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+// Estado temporal de dotación
+let _dotacionTemp = {};
+
+function setDotacionItem(itemId, valor) {
+    _dotacionTemp[itemId] = valor;
+    if (valor === true) delete _dotacionTemp[itemId + '_obs'];
+    // Guardar en localStorage temporalmente
+    const inspector = document.getElementById('dotacionInspector').value;
+    const fecha = document.getElementById('dotacionFecha').value;
+    const key = `${inspector}_${fecha}`;
+    const guardado = JSON.parse(localStorage.getItem(DOTACION_KEY) || '{}');
+    guardado[key] = { ...(guardado[key] || {}), ..._dotacionTemp };
+    localStorage.setItem(DOTACION_KEY, JSON.stringify(guardado));
+    renderDotacion();
+}
+
+function setDotacionObs(itemId, valor) {
+    const inspector = document.getElementById('dotacionInspector').value;
+    const fecha = document.getElementById('dotacionFecha').value;
+    const key = `${inspector}_${fecha}`;
+    const guardado = JSON.parse(localStorage.getItem(DOTACION_KEY) || '{}');
+    if (!guardado[key]) guardado[key] = {};
+    guardado[key][itemId + '_obs'] = valor;
+    localStorage.setItem(DOTACION_KEY, JSON.stringify(guardado));
+}
+
+function guardarDotacion() {
+    const inspector = document.getElementById('dotacionInspector').value;
+    const fecha = document.getElementById('dotacionFecha').value;
+    if (!inspector) { alert('Selecciona un inspector'); return; }
+
+    const key = `${inspector}_${fecha}`;
+    const guardado = JSON.parse(localStorage.getItem(DOTACION_KEY) || '{}');
+    if (!guardado[key]) guardado[key] = {};
+    if (dotacionFotoData) guardado[key].foto = dotacionFotoData;
+    guardado[key].inspector = inspector;
+    guardado[key].fecha = fecha;
+    localStorage.setItem(DOTACION_KEY, JSON.stringify(guardado));
+
+    alert(`Dotación de ${inspector} guardada para el ${fecha}.`);
+    // Limpiar para nueva inspección
+    dotacionFotoData = null;
+    _dotacionTemp = {};
+    document.getElementById('dotacionInspector').value = '';
+    document.getElementById('dotacionForm').innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:16px;">Selecciona un inspector para continuar.</p>';
+}
+
+function verHistorialDotacion() {
+    const guardado = JSON.parse(localStorage.getItem(DOTACION_KEY) || '{}');
+    const histDiv = document.getElementById('historialDotacion');
+    if (Object.keys(guardado).length === 0) {
+        histDiv.innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:16px;">No hay registros de dotación.</p>';
+        histDiv.style.display = 'block';
+        return;
+    }
+
+    const registros = Object.values(guardado).sort((a, b) => (b.fecha || '').localeCompare(a.fecha || ''));
+    histDiv.innerHTML = registros.map((r, i) => {
+        const ok = DOTACION_ITEMS.filter(it => r[it.id] === true).length;
+        const no = DOTACION_ITEMS.filter(it => r[it.id] === false).length;
+        return `
+        <div style="background:#0d1424;border:1px solid #1a2e50;border-radius:10px;padding:12px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleHistorialDia('hdot_${i}')">
+                <div>
+                    <strong style="color:var(--gray-800);">${r.inspector || '—'}</strong>
+                    <span style="font-size:12px;color:var(--gray-500);margin-left:8px;">${r.fecha || ''}</span>
+                </div>
+                <span style="font-size:12px;">
+                    <span style="color:#22c55e;">${ok} ok</span> · <span style="color:#ef4444;">${no} no</span>
+                </span>
+            </div>
+            <div id="hdot_${i}" style="display:none;margin-top:10px;">
+                ${r.foto ? `<img src="${r.foto}" style="max-width:100%;border-radius:8px;max-height:150px;margin-bottom:8px;">` : ''}
+                ${DOTACION_ITEMS.map(it => r[it.id] !== undefined ? `
+                <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1a2e50;font-size:13px;">
+                    <span style="color:var(--gray-600);">${it.label}</span>
+                    <span style="color:${r[it.id] ? '#22c55e' : '#ef4444'};font-weight:600;">
+                        ${r[it.id] ? 'Si' : 'No'}${r[it.id + '_obs'] ? ` — ${r[it.id + '_obs']}` : ''}
+                    </span>
+                </div>` : '').join('')}
+            </div>
+        </div>`;
+    }).join('');
+    histDiv.style.display = 'block';
+}
+
+// Foto dotación
+document.addEventListener('change', (e) => {
+    if (e.target.id !== 'dotacionFotoGallery2') return;
+    const file = e.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            dotacionFotoData = ev.target.result;
+            const prev = document.getElementById('dotacionFotoPreview');
+            if (prev) prev.innerHTML = `<img src="${dotacionFotoData}" style="max-width:100%;border-radius:8px;max-height:200px;">`;
+        };
+        reader.readAsDataURL(file);
+    }
 });
