@@ -4003,28 +4003,44 @@ function guardarCharla() {
     charlaFoto1 = null; charlaFoto2 = null;
 }
 
-function verHistorialCharla() {
-    const charlas = JSON.parse(localStorage.getItem(CHARLA_KEY) || '[]');
+async function verHistorialCharla() {
     const histDiv = document.getElementById('historialCharla');
-    if (charlas.length === 0) {
-        histDiv.innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:16px;">No hay charlas registradas.</p>';
-        histDiv.style.display = 'block';
-        return;
-    }
-    histDiv.innerHTML = charlas.map((c, i) => `
-        <div style="background:#0d1424;border:1px solid #1a2e50;border-radius:10px;padding:12px;margin-bottom:8px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleHistorialDia('hcharla_${i}')">
-                <div>
-                    <strong style="color:var(--gray-800);font-size:14px;">${c.sede}</strong>
-                    <span style="font-size:12px;color:var(--gray-500);margin-left:8px;">${c.fecha} ${c.hora}</span>
-                </div>
-                <span style="color:var(--primary);font-size:12px;">Ver</span>
-            </div>
-            <div id="hcharla_${i}" style="display:none;margin-top:10px;">
-                <p style="color:var(--gray-600);font-size:13px;margin-bottom:8px;"><strong>Tema:</strong> ${c.tema}</p>
-                ${c.lat ? `<p style="font-size:12px;color:var(--gray-500);">Lat: ${c.lat} | Lng: ${c.lng}</p>
-                <a href="https://www.google.com/maps?q=${c.lat},${c.lng}" target="_blank" style="color:var(--primary);font-size:12px;">Ver en Google Maps</a>` : ''}
-            </div>
-        </div>`).join('');
+    histDiv.innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:16px;">Cargando...</p>';
     histDiv.style.display = 'block';
+
+    try {
+        const res = await fetch(GAS_URL_FIJA, {
+            method: 'POST', redirect: 'follow',
+            headers: { 'Content-Type': 'text/plain' },
+            body: JSON.stringify({ accion: 'obtenerCharlas' })
+        });
+        const data = await res.json();
+        const charlas = data.datos || [];
+
+        if (charlas.length === 0) {
+            histDiv.innerHTML = '<p style="color:var(--gray-500);text-align:center;padding:16px;">No hay charlas registradas.</p>';
+            return;
+        }
+
+        histDiv.innerHTML = charlas.map((c, i) => `
+            <div style="background:#0d1424;border:1px solid #1a2e50;border-radius:10px;padding:12px;margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;" onclick="toggleHistorialDia('hcharla_${i}')">
+                    <div>
+                        <strong style="color:var(--gray-800);font-size:14px;">${c.Sede || c.sede || ''}</strong>
+                        <span style="font-size:12px;color:var(--gray-500);margin-left:8px;">${c.Fecha || c.fecha || ''} ${c.Hora || c.hora || ''}</span>
+                    </div>
+                    <span style="color:var(--primary);font-size:12px;">Ver</span>
+                </div>
+                <div id="hcharla_${i}" style="display:none;margin-top:10px;">
+                    <p style="color:var(--gray-600);font-size:13px;margin-bottom:8px;"><strong>Tema:</strong> ${c.Tema || c.tema || ''}</p>
+                    ${(c.Latitud || c.lat) ? `<a href="https://www.google.com/maps?q=${c.Latitud||c.lat},${c.Longitud||c.lng}" target="_blank" style="color:var(--primary);font-size:12px;">Ver en Google Maps</a>` : ''}
+                    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
+                        ${c.Foto1 && c.Foto1 !== '' ? `<img src="${c.Foto1}" style="max-width:48%;border-radius:8px;" onerror="this.style.display='none'">` : ''}
+                        ${c.Foto2 && c.Foto2 !== '' ? `<img src="${c.Foto2}" style="max-width:48%;border-radius:8px;" onerror="this.style.display='none'">` : ''}
+                    </div>
+                </div>
+            </div>`).join('');
+    } catch(err) {
+        histDiv.innerHTML = `<p style="color:#ef4444;text-align:center;padding:16px;">Error al cargar: ${err.message}</p>`;
+    }
 }
