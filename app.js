@@ -18,7 +18,7 @@ var CAMPOS_FULL = ['Observaciones', 'Google Maps'];
 var _todosLosReportes = [];
 
 // URL del Google Apps Script — fija en el código
-const GAS_URL_FIJA = 'https://script.google.com/macros/s/AKfycbyWAuaEAHIJGgAWkAAR0V6nVB929xKuSHaVKjtNQhRbdJnL_W5RWyvLU0IpZ6TxIko8Zg/exec';
+const GAS_URL_FIJA = 'https://script.google.com/macros/s/AKfycbwUNZ8ejynaHiAy4sS1KV10uhye8wTosWWr4e6IA7KdUqdzZ8DNmpibdlkfeuqMMntE4g/exec';
 
 function getScriptURL() {
   // Llamada directa al Google Apps Script (sin proxy)
