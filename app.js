@@ -3614,6 +3614,12 @@ function guardarAsistencia() {
         if (!confirm(`Faltan ${sinMarcar.length} inspector(es) sin marcar. ¿Guardar de todas formas?`)) return;
     }
     alert(`Asistencia del ${fecha} guardada correctamente.`);
+
+    // Avanzar al día siguiente y limpiar para nueva asistencia
+    const siguiente = new Date(fecha + 'T12:00:00');
+    siguiente.setDate(siguiente.getDate() + 1);
+    document.getElementById('asistenciaFecha').value = siguiente.toISOString().split('T')[0];
+    renderAsistencia();
 }
 
 function verHistorialAsistencia() {
